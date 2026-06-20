@@ -1,5 +1,10 @@
+
+import Footer from "@/components/landing/Footer";
+import Hero from "@/components/landing/Hero";
+import Navbar from "@/components/landing/Navbar";
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
+import { use } from "react";
 
 export default async function Home() {
 
@@ -7,11 +12,17 @@ export default async function Home() {
     headers : await headers()
   })
 
+  
+
   console.log('user', user?.user);
   
 
 
   return (
-    <div>hy there</div>
+   <>
+    <Navbar />
+    <Hero />
+    <Footer />
+   </>
   )
 }
