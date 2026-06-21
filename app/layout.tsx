@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Inter, Instrument_Serif, Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -27,9 +31,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", inter.variable, instrumentSerif.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col">{children}</body>
+
+      <Toaster richColors position="top-right"/>
     </html>
   );
 }

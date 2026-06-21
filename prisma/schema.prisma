@@ -26,9 +26,27 @@ model User {
   @@map("user")
 }
 
+
+
+
+
+model InvoiceItem {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Int
+  invoiceId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+}
+
+
 model Client {
   id        String    @id @default(uuid())
   name      String
+  address   String?
+  phone     String?
   email     String
   company   String
   userId    String
@@ -53,17 +71,18 @@ model Invoice {
   updatedAt    DateTime       @updatedAt
   client       Client         @relation(fields: [clientId], references: [id])
   invoiceItems InvoiceItem[]
+  payment      Payment?       
 }
 
-model InvoiceItem {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  price       Int
-  invoiceId   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+model Payment {
+  id        String   @id @default(uuid())
+  amount    Int                         
+  method    String?                     
+  invoiceId String   @unique             
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  paidAt    DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Session {
@@ -119,7 +138,8 @@ enum ROLE {
 }
 
 enum PAYMENT_STATUS {
-  PENDING
+  SENT
+  OVERDUE
   PROCESSING
   PAID
 }

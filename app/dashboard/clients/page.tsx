@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { MoreHorizontal, Plus } from "lucide-react";
 import { headers } from "next/headers";
 import SearchToggle from "@/components/shared/SearchToggle";
+import ClientButton from "@/components/shared/ClientButton";
+import ClientActions from "@/components/shared/ClientAction";
 
 type Props = {
   searchParams: Promise<{
@@ -70,10 +72,7 @@ const Client = async ({ searchParams }: Props) => {
           </p>
         </div>
 
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Client
-        </Button>
+       <ClientButton />
       </div>
 
       <div className="overflow-hidden rounded-xl border bg-background">
@@ -142,12 +141,16 @@ const Client = async ({ searchParams }: Props) => {
                       </td>
 
                       <td className="px-6 py-4">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                       <ClientActions
+                        client={{
+                            id: client.id,
+                            name: client.name,
+                            email: client.email,
+                            company: client.company,
+                            phone: client.phone,
+                            address: client.address,
+                        }}
+                        />
                       </td>
                     </tr>
                   );

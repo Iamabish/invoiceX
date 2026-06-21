@@ -1,11 +1,14 @@
-import SideBar from "@/components/dashboard/Sidebar"
+"use server"
+import ClientForm from "@/components/shared/ClientForm"
 import Search from "@/components/shared/Search"
 
-const Dashboard = () => {
+const Dashboard = async () => {
   return (
     <>
         this is dashboard
-        <Search />
+        {/* <Search /> */}
+
+
     </>
   )
 }

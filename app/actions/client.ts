@@ -1,44 +1,70 @@
+"use server"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
+import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 
-const user = await auth.api.getSession()
 
 export async function addClient(fomrData : FormData) {
+
+    const user = await auth.api.getSession({
+    headers : await headers()
+    })
+
     try {
+
+        console.log('at add client ');
+        
         
     const name = fomrData.get("name") as string
     const email = fomrData.get("email") as string
     const company = fomrData.get("company") as string
+    const phone = fomrData.get("phone") as string
+    const address = fomrData.get("address") as string
+
+    console.log(name);
+    console.log(email);
+    console.log(company);
     
     const client = await prisma.client.create({
         data :{
             name,
             email,
             company,
-            userId : user?.user.id!
+            
+            userId : user?.user.id!,
+            phone : phone,
+            address : address,
+                       
         }
     })
 
     console.log('new client', client)
 
-    return {success : true, client}
-    
 
     }catch(err) {
-
         console.log('error', err);
-        
-
+        throw err
     }
+
+
+    revalidatePath('/daashboard/clients')
 }
 
-export async function editClient(fomrData : FormData) {
+export async function editClient(clientId : string, fomrData : FormData) {
+
+    const user = await auth.api.getSession({
+    headers : await headers()
+})
+
+
     try {
-        
-    const name = fomrData.get("name") as string
-    const email = fomrData.get("email") as string
-    const company = fomrData.get("company") as string
-    const clientId = fomrData.get('clientId') as string
+        const name = fomrData.get("name") as string
+        const email = fomrData.get("email") as string
+        const company = fomrData.get("company") as string
+        const phone = fomrData.get("phone") as string
+        const address = fomrData.get("address") as string
     
 
     const isClient = await prisma.client.findUnique({
@@ -59,27 +85,36 @@ export async function editClient(fomrData : FormData) {
         data :{
             name : name,
             email : email,
-            company : company
-
+            company : company,
+            phone : phone,
+            address : address
         }
     })
 
 
-    return {success : true, client}
-
-    
 
     }catch(err) {
 
         console.log('error', err);
-        
+        throw err
 
     }
+
+    
+    revalidatePath('/daashboard/clients')
 }
 
-export async function deleteClient(formData : FormData) {
+export async function deleteClient(clientId : string) {
+
+    const user = await auth.api.getSession({
+    headers : await headers()
+})
+
+
+console.log('at delete client ');
+
+
     try {
-        const clientId = formData.get('clientId') as string
     
         const isClient = await prisma.client.findUnique({
             where :{
@@ -93,13 +128,16 @@ export async function deleteClient(formData : FormData) {
         }
     
         await prisma.client.delete({where : {id : clientId}})
-    
-        return {success : true}
-
-    } catch (error) {
-
-        console.log('error', error);
         
+ 
+    
+
+    } catch (err) {
+        console.log('err', err);
+        throw err
         
     }
+
+
+    revalidatePath('/daashboard/clients')
 }
