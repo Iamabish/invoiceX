@@ -33,9 +33,12 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", inter.variable, instrumentSerif.variable, "font-sans", geist.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}
 
       <Toaster richColors position="top-right"/>
+
+      </body>
+
     </html>
   );
 }
