@@ -31,11 +31,9 @@ export async function addClient(fomrData : FormData) {
             name,
             email,
             company,
-            
             userId : user?.user.id!,
             phone : phone,
             address : address,
-                       
         }
     })
 

@@ -1,6 +1,7 @@
 "use server"
 import ClientForm from "@/components/shared/ClientForm"
-import Search from "@/components/shared/Search"
+import InvoiceForm from "@/components/shared/InvoiceForm"
+import InvoiceFormClient from "@/components/shared/InvoiceFormClient"
 
 const Dashboard = async () => {
   return (
@@ -8,7 +9,7 @@ const Dashboard = async () => {
         this is dashboard
         {/* <Search /> */}
 
-
+    <InvoiceForm />
     </>
   )
 }

@@ -1,5 +1,4 @@
 import { NextProxy, NextRequest, NextResponse } from "next/server";
-import { auth } from "./lib/auth";
 import { getSessionCookie } from "better-auth/cookies";
 
 export const config = {
@@ -9,6 +8,7 @@ export const config = {
 export async function proxy(req : NextRequest) {
 
     const sessionCookie = getSessionCookie(req)
+    
 
     console.log('session cookie', sessionCookie);
 

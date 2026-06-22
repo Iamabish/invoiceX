@@ -12,7 +12,7 @@ export default async function DashboardLayout({
         headers : await headers()
     })
 
-    console.log('user', user);
+    console.log('user', user?.user);
 
 
   return (

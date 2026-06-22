@@ -1,5 +1,5 @@
 
-import { PrismaClient, ROLE, PAYMENT_STATUS } from "../app/generated/prisma";
+import { PrismaClient, ROLE, INVOICE_STATUS } from "../app/generated/prisma";
 import { faker } from "@faker-js/faker";
 
 import { hashPassword } from "better-auth/crypto";
@@ -13,11 +13,11 @@ const CLIENTS_PER_USER = 12;
 const MIN_INVOICES_PER_CLIENT = 2;
 const MAX_INVOICES_PER_CLIENT = 6;
 const PASSWORD_PLAIN = "Password123!"; 
-const STATUS_CYCLE: PAYMENT_STATUS[] = [
-  PAYMENT_STATUS.SENT,
-  PAYMENT_STATUS.OVERDUE,
-  PAYMENT_STATUS.PROCESSING,
-  PAYMENT_STATUS.PAID,
+const STATUS_CYCLE: INVOICE_STATUS[] = [
+  INVOICE_STATUS.SENT,
+  INVOICE_STATUS.OVERDUE,
+  INVOICE_STATUS.PAID,
+  INVOICE_STATUS.DRAFT
 ];
 
 function pick<T>(arr: T[], i: number): T {
@@ -243,18 +243,24 @@ async function main() {
           to: faker.date.soon({ days: 90 }),
         });
 
+         const issueDate = faker.date.between({
+          from: faker.date.recent({ days: 90 }),
+          to: faker.date.soon({ days: 90 }),
+        });
+
         const status = pick(STATUS_CYCLE, invoiceCounter);
 
         
         const itemCount = faker.number.int({ min: 1, max: 5 });
         const items = Array.from({ length: itemCount }).map(() => ({
-          name: faker.commerce.productName(),
-          description: faker.commerce.productDescription(),
-          price: faker.number.int({ min: 500, max: 50000 }), // cents
-        }));
+        description: faker.commerce.productDescription(),
+        quantity: faker.number.int({ min: 1, max: 10 }),
+        unitPrice: faker.number.int({ min: 500, max: 50000 }),
+        }))
 
-        const subTotal = items.reduce((sum, it) => sum + it.price, 0);
-        const taxRate = 0.08;
+        const subTotal = items.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0)
+
+        const taxRate = 8 
         const tax = Math.round(subTotal * taxRate);
         const total = subTotal + tax;
 
@@ -262,7 +268,10 @@ async function main() {
           data: {
             userId: owner.id,
             clientId: client.id,
+            invoiceNumber: `INV-${String(invoiceCounter).padStart(4, '0')}`,
             subTotal,
+            taxRate,
+            issueDate,
             tax,
             total,
             dueDate,

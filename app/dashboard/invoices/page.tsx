@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import {  Eye, Plus } from "lucide-react";
 import { headers } from "next/headers";
-import { PAYMENT_STATUS } from "@/app/generated/prisma";
+import { INVOICE_STATUS } from "@/app/generated/prisma";
 import FilterToggle from "@/components/shared/FilterToggle";
 
 const invoices = [
@@ -91,7 +91,7 @@ const Invoice = async ({searchParams} : Props) => {
   }
 
   if (status && status !== "All") {
-    where.status = status.toUpperCase() as PAYMENT_STATUS;
+    where.status = status.toUpperCase() as INVOICE_STATUS;
   }
 
   
