@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const filters = ["All", "Sent", "Paid", "Overdue", "Processing"];
+const filters = ["All", "Sent", "Paid", "Overdue", "Draft"];
 
 
 const FilterToggle = () => {

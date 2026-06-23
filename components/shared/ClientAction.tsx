@@ -36,7 +36,7 @@ export type ClientType = {
   id: string;
   name: string;
   email: string;
-  company: string;
+  company?: string | null;
   phone?: string | null;
   address?: string | null;
 };

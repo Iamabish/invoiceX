@@ -6,37 +6,14 @@ import {  Eye, Plus } from "lucide-react";
 import { headers } from "next/headers";
 import { INVOICE_STATUS } from "@/app/generated/prisma";
 import FilterToggle from "@/components/shared/FilterToggle";
+import Link from "next/link";
 
-const invoices = [
-  {
-    id: "INV-041",
-    client: "Acme Corp",
-    amount: "$3,200",
-    due: "Jun 18",
-    status: "Paid",
-  },
-  {
-    id: "INV-040",
-    client: "Studio Noir",
-    amount: "$1,800",
-    due: "Jun 22",
-    status: "Sent",
-  },
-  {
-    id: "INV-039",
-    client: "Orbit Labs",
-    amount: "$2,580",
-    due: "Jun 10",
-    status: "Overdue",
-  },
-];
 
-const filters = ["All", "Sent", "Paid", "Overdue", "Processing" ];
 
 const statusStyles = {
   PAID: "bg-emerald-100 text-emerald-700",
   SENT: "bg-blue-100 text-blue-700",
-  PROCESSING: "bg-amber-100 text-amber-700",
+  Draft: "bg-amber-100 text-amber-700",
   OVERDUE: "bg-red-100 text-red-700",
 };
 
@@ -59,7 +36,6 @@ type Props = {
 
 const Invoice = async ({searchParams} : Props) => {
 
-  
   
 
   const user = await auth.api.getSession({
@@ -87,6 +63,16 @@ const Invoice = async ({searchParams} : Props) => {
             },
           },
         },
+
+
+        {
+          client : {
+            company : {
+              contains: search,
+              mode: "insensitive",
+            }
+          }
+        }
       ];
   }
 
@@ -126,15 +112,15 @@ const Invoice = async ({searchParams} : Props) => {
 
 
   console.log('fetched invoice', fetchInvoice);
-  
   return (
-    <section className="flex-1 space-y-8 p-8">
-      <div className="flex items-center justify-between">
+
+  
+    <section className="flex h-screen flex-col p-8">
+      <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
             Invoices
           </h1>
-          
         </div>
 
         <button className="inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-zinc-800">
@@ -143,7 +129,8 @@ const Invoice = async ({searchParams} : Props) => {
         </button>
       </div>
 
-      <div className="rounded-3xl border border-zinc-200 bg-white shadow-sm">
+      <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
+
         <div className="flex items-center justify-between border-b border-zinc-200 p-6">
           <h2 className="text-lg font-semibold text-zinc-900">
             All Invoices
@@ -154,9 +141,9 @@ const Invoice = async ({searchParams} : Props) => {
 
         <FilterToggle />
 
-        <div className="overflow-x-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide">
           <table className="w-full">
-            <thead className="border-b border-zinc-200 bg-zinc-50">
+            <thead className="sticky top-0 z-10 border-b border-zinc-200 bg-zinc-50">
               <tr className="text-left text-sm text-zinc-500">
                 <th className="px-6 py-4 font-medium">Invoice</th>
                 <th className="px-6 py-4 font-medium">Client</th>
@@ -173,7 +160,7 @@ const Invoice = async ({searchParams} : Props) => {
               {fetchInvoice.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-6 py-10 text-center text-zinc-500"
                   >
                     No invoices found.
@@ -229,10 +216,13 @@ const Invoice = async ({searchParams} : Props) => {
                     </td>
 
                     <td className="px-6 py-5 text-right">
-                      <button className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-700 transition hover:bg-zinc-100">
+                      <Link
+                        href={`invoices/${invoice.id}`}
+                        className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-700 transition hover:bg-zinc-100"
+                      >
                         <Eye className="h-4 w-4" />
                         View
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 ))
@@ -243,7 +233,7 @@ const Invoice = async ({searchParams} : Props) => {
 
         <div className="flex items-center justify-between border-t border-zinc-200 p-6">
           <p className="text-sm text-zinc-500">
-            24 invoices total
+            {total} invoices total
           </p>
 
           <div className="flex gap-2">
@@ -263,7 +253,10 @@ const Invoice = async ({searchParams} : Props) => {
         </div>
       </div>
     </section>
-  );
+
+
+  )
+
 };
 
 export default Invoice;
