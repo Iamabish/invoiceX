@@ -17,6 +17,7 @@ import {
   MapPin,
   ReceiptText,
 } from "lucide-react";
+import InvoiceDownloadButton from "@/components/shared/InvoiceDownloadButton";
 
 const InvoiceDetailPage = async ({
   params,
@@ -111,10 +112,7 @@ const InvoiceDetailPage = async ({
 
         <div className="flex flex-wrap gap-3">
 
-          <Button variant="outline" className="gap-2 rounded-xl">
-            <Download className="h-4 w-4" />
-            Download PDF
-          </Button>
+          <InvoiceDownloadButton id={id}/>
 
           <Button className="gap-2 rounded-xl">
             <Mail className="h-4 w-4" />
