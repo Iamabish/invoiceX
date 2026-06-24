@@ -7,7 +7,6 @@ import { headers } from "next/headers"
 
 export async function createInvoice( data: InvoiceFormValues) {
 
-    console.log('at create invoice');
     
     try {
         const user = await auth.api.getSession({
@@ -20,21 +19,12 @@ export async function createInvoice( data: InvoiceFormValues) {
 
         console.log('user at incovice',user.user.id);
         
-    
-    
-      const issueDate =  data.issueDate
-      const dueData = data.dueDate
-      const taxRate = data.taxRate
-      const notes = data.notes
-      const items = data.items
-        
-        console.log('issuedata', issueDate);
-        console.log('due data',dueData);
-        console.log('taxrate ', taxRate);
-        console.log('notes', notes);
-        console.log('items', items);
-    
-    
+        const issueDate =  data.issueDate
+        const dueData = data.dueDate
+        const taxRate = data.taxRate
+        const notes = data.notes
+        const items = data.items
+      
     
       if(Number(taxRate) < 0 || Number(taxRate) > 100 ) {
         throw new Error("Invalid tax Rate")
@@ -48,7 +38,6 @@ export async function createInvoice( data: InvoiceFormValues) {
         }
       })
 
-      console.log('valid client', isValidClient);
       
     
       if(!isValidClient) {

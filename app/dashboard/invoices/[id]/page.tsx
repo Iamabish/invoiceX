@@ -18,6 +18,7 @@ import {
   ReceiptText,
 } from "lucide-react";
 import InvoiceDownloadButton from "@/components/shared/InvoiceDownloadButton";
+import SendInvoiceClientButton from "@/components/shared/SendInvoiceClientButton";
 
 const InvoiceDetailPage = async ({
   params,
@@ -69,8 +70,6 @@ const InvoiceDetailPage = async ({
     notFound();
   }
 
-
-
   const badgeVariant = () => {
     switch (invoice.status) {
       case "PAID":
@@ -114,10 +113,7 @@ const InvoiceDetailPage = async ({
 
           <InvoiceDownloadButton id={id}/>
 
-          <Button className="gap-2 rounded-xl">
-            <Mail className="h-4 w-4" />
-            Send Invoice
-          </Button>
+          <SendInvoiceClientButton invoiceId={id}/>
 
           {invoice.status === "DRAFT" && (
             <Button
