@@ -12,7 +12,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendInvoice(invoiceId: string) {
 
-    
 
   const session = await auth.api.getSession({
     headers: await headers(),

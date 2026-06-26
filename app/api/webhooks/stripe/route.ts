@@ -27,7 +27,8 @@ export  async function POST(req : NextRequest) {
                 id : incoviceId
             },
             data :{
-                status : "PAID"
+                status : "PAID",
+                paidAt : Date.now().toLocaleString(),
             }
         })  
       }

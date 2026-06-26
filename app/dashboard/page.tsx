@@ -1,23 +1,50 @@
-"use server"
-import ClientForm from "@/components/shared/ClientForm"
-import InvoiceForm from "@/components/shared/InvoiceForm"
-import InvoiceFormClient from "@/components/shared/InvoiceFormClient"
-import InvoiceDetailPage from "./invoices/[id]/page"
-import generatePDF from "../utils/generatePDF"
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import AlertBanner from "@/components/dashboard/AlertBanner";
+import StatsCards from "@/components/dashboard/StatsCards";
+import RevenueChart from "@/components/dashboard/RevenueChart";
+import NeedsAttention from "@/components/dashboard/NeedsAttention";
+import RecentInvoices from "@/components/dashboard/RecentInvoice";
+import TopClients from "@/components/dashboard/TopClients";
+import RecentActivity from "@/components/dashboard/RecentActivity";
+import QuickActions from "@/components/dashboard/QuickAction";
 
-const Dashboard = async () => {
-
-
+export default async function Dashboard() {
   return (
-    <>
-        this is dashboard
-        {/* <Search /> */}
+    <div className="space-y-8">
 
-        {/* <InvoiceForm /> */}
+      <DashboardHeader />
 
-       
-    </>
-  )
+      <AlertBanner />
+
+      <StatsCards />
+
+      {/* Main Section */}
+      <div className="grid gap-6 xl:grid-cols-[2fr_360px]">
+
+        <RevenueChart />
+
+        <NeedsAttention />
+
+      </div>
+
+      {/* Second Section */}
+      <div className="grid gap-6 xl:grid-cols-[2fr_360px]">
+
+        <RecentInvoices />
+
+        <TopClients />
+
+      </div>
+
+      {/* Third Section */}
+      <div className="grid gap-6 xl:grid-cols-[2fr_360px]">
+
+        <RecentActivity />
+
+        <QuickActions />
+
+      </div>
+
+    </div>
+  );
 }
-
-export default Dashboard
