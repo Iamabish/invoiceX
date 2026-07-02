@@ -1,4 +1,4 @@
-"use client";
+
 
 import {
   Area,
@@ -9,6 +9,8 @@ import {
   XAxis,
 } from "recharts";
 import { Card } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const revenue = [
   { month: "Jan", revenue: 4200 },
@@ -20,7 +22,17 @@ const revenue = [
   { month: "Jul", revenue: 7800 },
 ];
 
-export default function RevenueChart() {
+
+export default async function RevenueChart() {
+
+
+  const user = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const now = new Date();
+
+
   return (
     <Card className="rounded-2xl p-6">
 
