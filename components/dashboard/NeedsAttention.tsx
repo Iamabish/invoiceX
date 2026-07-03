@@ -1,90 +1,69 @@
+// NeedsAttention.tsx
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  TriangleAlert,
-  FileClock,
-  Eye,
-} from "lucide-react";
+import { TriangleAlert, FileClock, Eye, ArrowRight } from "lucide-react";
 
 const items = [
   {
     title: "Orbit Labs",
-    subtitle: "INV-1023 • 8 days overdue",
+    subtitle: "Invoice INV-1023 • 8 days overdue",
     icon: TriangleAlert,
-    color: "text-red-500",
+    dot: "bg-red-500",
   },
   {
     title: "Acme Inc",
-    subtitle: "Draft awaiting approval",
+    subtitle: "Draft invoice awaiting approval",
     icon: FileClock,
-    color: "text-amber-500",
+    dot: "bg-amber-500",
   },
   {
     title: "Nova Studio",
-    subtitle: "Viewed but unpaid",
+    subtitle: "Invoice viewed but not paid",
     icon: Eye,
-    color: "text-blue-500",
+    dot: "bg-sky-500",
   },
 ];
 
 export default function NeedsAttention() {
   return (
-    <Card className="rounded-2xl p-6">
-
-      <div className="mb-6">
-
-        <h2 className="text-lg font-semibold">
-          Needs Attention
-        </h2>
-
-        <p className="text-sm text-muted-foreground">
-          Recent items requiring action.
-        </p>
-
+    <Card className="rounded-[36px] border-0 bg-white p-7 shadow-sm">
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Needs Attention</h2>
+        <p className="mt-1 text-sm text-slate-500">Items requiring your action</p>
       </div>
 
       <div className="space-y-4">
-
         {items.map((item) => {
           const Icon = item.icon;
 
           return (
             <div
               key={item.title}
-              className="rounded-xl border p-4 transition hover:bg-muted/50"
+              className="rounded-3xl bg-slate-50 p-5 transition-all duration-200 hover:bg-slate-100"
             >
-              <div className="flex items-start gap-3">
-
-                <div className="rounded-lg bg-muted p-2">
-                  <Icon className={`h-5 w-5 ${item.color}`} />
+              <div className="flex items-start gap-4">
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white">
+                  <Icon className="h-5 w-5 text-slate-500" />
+                  <span className={`absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-white ${item.dot}`} />
                 </div>
 
-                <div className="flex-1">
-
-                  <h4 className="font-medium">
-                    {item.title}
-                  </h4>
-
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {item.subtitle}
-                  </p>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-slate-900">{item.title}</h3>
+                  <p className="mt-1 text-sm leading-6 text-slate-500">{item.subtitle}</p>
 
                   <Button
-                    variant="link"
-                    className="mt-2 h-auto p-0"
+                    variant="ghost"
+                    className="mt-4 h-auto rounded-full px-0 text-sm font-medium text-[#0F2A4A] hover:bg-transparent hover:text-sky-600"
                   >
-                    View →
+                    View Details
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-
                 </div>
-
               </div>
             </div>
           );
         })}
-
       </div>
-
     </Card>
   );
 }

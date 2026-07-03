@@ -1,50 +1,50 @@
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import AlertBanner from "@/components/dashboard/AlertBanner";
 import StatsCards from "@/components/dashboard/StatsCards";
 import RevenueChart from "@/components/dashboard/RevenueChart";
 import NeedsAttention from "@/components/dashboard/NeedsAttention";
 import RecentInvoices from "@/components/dashboard/RecentInvoice";
 import TopClients from "@/components/dashboard/TopClients";
-import RecentActivity from "@/components/dashboard/RecentActivity";
 import QuickActions from "@/components/dashboard/QuickAction";
 
 export default async function Dashboard() {
   return (
-    <div className="space-y-8">
+    <main className="min-h-screen bg-[#F7F9FC]">
 
-      <DashboardHeader />
+      <div className="mx-auto max-w-[1700px] px-10 py-8">
 
-      <AlertBanner />
+        <DashboardHeader />
+        {/* Dashboard */}
+        <section className="mt-8 grid grid-cols-[320px_1fr_320px] gap-6">
 
-      <StatsCards />
+          {/* Left KPI Column */}
+          <aside className="sticky top-8">
+            <StatsCards />
+          </aside>
 
-      {/* Main Section */}
-      <div className="grid gap-6 xl:grid-cols-[2fr_360px]">
+          {/* Main Content */}
+          <section className="space-y-6">
 
-        <RevenueChart />
+            <RevenueChart />
 
-        <NeedsAttention />
+            <RecentInvoices />
+
+          </section>
+
+          {/* Right Sidebar */}
+          <aside className="space-y-6">
+
+            <NeedsAttention />
+
+            <TopClients />
+
+            <QuickActions />
+
+          </aside>
+
+        </section>
 
       </div>
 
-      {/* Second Section */}
-      <div className="grid gap-6 xl:grid-cols-[2fr_360px]">
-
-        <RecentInvoices />
-
-        <TopClients />
-
-      </div>
-
-      {/* Third Section */}
-      <div className="grid gap-6 xl:grid-cols-[2fr_360px]">
-
-        <RecentActivity />
-
-        <QuickActions />
-
-      </div>
-
-    </div>
+    </main>
   );
 }

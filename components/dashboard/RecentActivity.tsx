@@ -3,63 +3,70 @@ import {
   Mail,
   Eye,
   AlertTriangle,
-  ArrowUpRight,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 
 const activity = [
   {
-    title: "Invoice INV-1024 paid",
-    description: "Acme Inc. completed payment",
-    time: "2 min ago",
+    title: "Invoice Paid",
+    description: "Acme Inc. • INV-1024",
+    time: "2m ago",
     icon: CheckCircle2,
-    color: "text-green-600",
+    bg: "bg-emerald-50",
+    color: "text-emerald-600",
   },
   {
-    title: "Reminder email sent",
+    title: "Reminder Sent",
     description: "Orbit Labs",
-    time: "24 min ago",
+    time: "24m ago",
     icon: Mail,
-    color: "text-blue-600",
+    bg: "bg-sky-50",
+    color: "text-sky-600",
   },
   {
-    title: "Invoice viewed",
-    description: "Nova Studio opened invoice",
-    time: "1 hour ago",
+    title: "Invoice Viewed",
+    description: "Nova Studio",
+    time: "1h ago",
     icon: Eye,
-    color: "text-purple-600",
+    bg: "bg-violet-50",
+    color: "text-violet-600",
   },
   {
-    title: "Invoice overdue",
+    title: "Payment Overdue",
     description: "Pixel Agency",
     time: "Yesterday",
     icon: AlertTriangle,
+    bg: "bg-red-50",
     color: "text-red-600",
   },
 ];
 
 export default function RecentActivity() {
   return (
-    <Card className="rounded-2xl p-6">
+    <Card className="rounded-[28px] border border-slate-200 bg-white p-7 shadow-sm">
 
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-7 flex items-center justify-between">
 
         <div>
 
-          <h2 className="text-lg font-semibold">
+          <h3 className="text-[19px] font-semibold text-slate-900">
             Recent Activity
-          </h2>
+          </h3>
 
-          <p className="text-sm text-muted-foreground">
-            Everything happening across your invoices.
+          <p className="mt-1 text-sm text-slate-500">
+            Latest invoice events
           </p>
 
         </div>
 
+        <button className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+          View all
+        </button>
+
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
 
         {activity.map((item) => {
           const Icon = item.icon;
@@ -67,41 +74,30 @@ export default function RecentActivity() {
           return (
             <div
               key={item.title}
-              className="flex items-start gap-4 rounded-xl border p-4 transition hover:bg-muted/40"
+              className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition-all duration-200 hover:border-blue-200 hover:bg-blue-50/40"
             >
-              <div className="rounded-xl bg-muted p-3">
+
+              <div
+                className={`flex h-11 w-11 items-center justify-center rounded-xl ${item.bg}`}
+              >
                 <Icon className={`h-5 w-5 ${item.color}`} />
               </div>
 
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
 
-                <div className="flex items-center justify-between">
+                <h4 className="truncate text-[15px] font-semibold text-slate-900">
+                  {item.title}
+                </h4>
 
-                  <div>
-
-                    <p className="font-medium">
-                      {item.title}
-                    </p>
-
-                    <p className="text-sm text-muted-foreground">
-                      {item.description}
-                    </p>
-
-                  </div>
-
-                  <div className="flex items-center gap-3">
-
-                    <span className="text-xs text-muted-foreground">
-                      {item.time}
-                    </span>
-
-                    <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
-
-                  </div>
-
-                </div>
+                <p className="mt-1 truncate text-sm text-slate-500">
+                  {item.description}
+                </p>
 
               </div>
+
+              <span className="whitespace-nowrap text-xs font-medium text-slate-400">
+                {item.time}
+              </span>
 
             </div>
           );

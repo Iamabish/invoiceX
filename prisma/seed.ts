@@ -1,9 +1,6 @@
-
-import { PrismaClient, ROLE, INVOICE_STATUS } from "../app/generated/prisma";
+import { ROLE, INVOICE_STATUS } from "../app/generated/prisma";
 import { faker } from "@faker-js/faker";
-
 import { hashPassword } from "better-auth/crypto";
-
 import prisma from "@/lib/prisma";
 
 faker.seed(42);
@@ -12,16 +9,34 @@ const NUM_REGULAR_USERS = 5;
 const CLIENTS_PER_USER = 12;
 const MIN_INVOICES_PER_CLIENT = 2;
 const MAX_INVOICES_PER_CLIENT = 6;
-const PASSWORD_PLAIN = "Password123!"; 
+const PASSWORD_PLAIN = "Password123!";
+
 const STATUS_CYCLE: INVOICE_STATUS[] = [
   INVOICE_STATUS.SENT,
   INVOICE_STATUS.OVERDUE,
   INVOICE_STATUS.PAID,
-  INVOICE_STATUS.DRAFT
+  INVOICE_STATUS.DRAFT,
 ];
 
 function pick<T>(arr: T[], i: number): T {
   return arr[i % arr.length];
+}
+
+// generates a random date within the last 12 months
+function randomDateInLastYear(): Date {
+  const now = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(now.getFullYear() - 1);
+  return faker.date.between({ from: oneYearAgo, to: now });
+}
+
+// generates paidAt spread across last 12 months, one per month
+function paidAtForMonth(monthsAgo: number): Date {
+  const date = new Date();
+  date.setMonth(date.getMonth() - monthsAgo);
+  date.setDate(faker.number.int({ min: 1, max: 28 }));
+  date.setHours(faker.number.int({ min: 9, max: 17 }), 0, 0, 0);
+  return date;
 }
 
 async function main() {
@@ -87,9 +102,9 @@ async function main() {
     regularUsers.push(user);
   }
 
-  const allLoginableUsers = [admin, unverifiedUser, ...regularUsers]; // 
-  console.log("🔗 Creating accounts...");
+  const allLoginableUsers = [admin, unverifiedUser, ...regularUsers];
 
+  console.log("🔗 Creating accounts...");
   for (const user of allLoginableUsers) {
     await prisma.account.create({
       data: {
@@ -117,7 +132,6 @@ async function main() {
     },
   });
 
-  
   await prisma.account.create({
     data: {
       id: faker.string.uuid(),
@@ -133,9 +147,7 @@ async function main() {
     },
   });
 
- 
   console.log("🪪 Creating sessions...");
-
   for (const user of allLoginableUsers) {
     await prisma.session.create({
       data: {
@@ -154,12 +166,11 @@ async function main() {
       id: faker.string.uuid(),
       token: faker.string.alphanumeric(48),
       userId: regularUsers[1].id,
-      expiresAt: faker.date.recent({ days: 5 }), // in the past
+      expiresAt: faker.date.recent({ days: 5 }),
       ipAddress: faker.internet.ipv4(),
       userAgent: faker.internet.userAgent(),
     },
   });
-
 
   await prisma.session.create({
     data: {
@@ -173,7 +184,6 @@ async function main() {
   });
 
   console.log("✉️  Creating verification tokens...");
-
   await prisma.verification.create({
     data: {
       id: faker.string.uuid(),
@@ -195,37 +205,34 @@ async function main() {
   console.log("🧾 Creating clients, invoices, and invoice items...");
 
   const companyPool = [
-    "Acme Inc",
-    "Acme Logistics",
-    "Globex Corporation",
-    "Initech",
-    "Umbrella Industries",
-    "Stark Enterprises",
-    "Wayne Holdings",
-    "Hooli LLC",
-    "Soylent Co",
-    "Vandelay Industries",
+    "Acme Inc", "Acme Logistics", "Globex Corporation", "Initech",
+    "Umbrella Industries", "Stark Enterprises", "Wayne Holdings",
+    "Hooli LLC", "Soylent Co", "Vandelay Industries",
   ];
 
   let clientCounter = 0;
-  let invoiceCounter = 0;
+  // track paid invoice index per user for monthly distribution
+  let paidMonthCursor: Record<string, number> = {};
 
   for (const owner of regularUsers) {
+    let userInvoiceCounter = 0; // per-user invoice sequence
+    paidMonthCursor[owner.id] = 0;
+
     for (let c = 0; c < CLIENTS_PER_USER; c++) {
       clientCounter++;
       const clientName = faker.person.fullName();
       const company = pick(companyPool, clientCounter);
 
-    const client = await prisma.client.create({
-    data: {
-        name: clientName,
-        email: faker.internet.email({ firstName: clientName.split(" ")[0] }).toLowerCase(),
-        company,
-        phone: faker.phone.number({ style: "international" }), 
-        address: faker.location.streetAddress({ useFullAddress: true }),
-        userId: owner.id,
-    },
-    });
+      const client = await prisma.client.create({
+        data: {
+          name: clientName,
+          email: faker.internet.email({ firstName: clientName.split(" ")[0] }).toLowerCase(),
+          company,
+          phone: faker.phone.number({ style: "international" }),
+          address: faker.location.streetAddress({ useFullAddress: true }),
+          userId: owner.id,
+        },
+      });
 
       const isEmptyClient = owner.id === regularUsers[0].id && c === 0;
       if (isEmptyClient) continue;
@@ -236,59 +243,74 @@ async function main() {
       });
 
       for (let i = 0; i < invoiceCount; i++) {
-        invoiceCounter++;
+        userInvoiceCounter++;
 
-        const dueDate = faker.date.between({
-          from: faker.date.recent({ days: 90 }),
-          to: faker.date.soon({ days: 90 }),
-        });
+        const status = pick(STATUS_CYCLE, userInvoiceCounter);
 
-         const issueDate = faker.date.between({
-          from: faker.date.recent({ days: 90 }),
-          to: faker.date.soon({ days: 90 }),
-        });
+        // dates based on status
+        let issueDate: Date;
+        let dueDate: Date;
+        let paidAt: Date | null = null;
 
-        const status = pick(STATUS_CYCLE, invoiceCounter);
+        if (status === INVOICE_STATUS.PAID) {
+          // spread paid invoices across last 12 months for dashboard charts
+          const monthsAgo = paidMonthCursor[owner.id] % 12;
+          paidMonthCursor[owner.id]++;
+          paidAt = paidAtForMonth(monthsAgo);
+          issueDate = new Date(paidAt);
+          issueDate.setDate(issueDate.getDate() - faker.number.int({ min: 7, max: 30 }));
+          dueDate = new Date(paidAt);
+          dueDate.setDate(dueDate.getDate() - faker.number.int({ min: 1, max: 5 }));
+        } else if (status === INVOICE_STATUS.OVERDUE) {
+          // overdue = due date in the past
+          dueDate = faker.date.recent({ days: 60 });
+          issueDate = new Date(dueDate);
+          issueDate.setDate(issueDate.getDate() - faker.number.int({ min: 7, max: 30 }));
+        } else if (status === INVOICE_STATUS.SENT) {
+          // sent = due date in the future
+          dueDate = faker.date.soon({ days: 60 });
+          issueDate = new Date(dueDate);
+          issueDate.setDate(issueDate.getDate() - faker.number.int({ min: 7, max: 30 }));
+        } else {
+          // draft = recent dates
+          issueDate = randomDateInLastYear();
+          dueDate = new Date(issueDate);
+          dueDate.setDate(dueDate.getDate() + faker.number.int({ min: 14, max: 45 }));
+        }
 
-        
         const itemCount = faker.number.int({ min: 1, max: 5 });
         const items = Array.from({ length: itemCount }).map(() => ({
-        description: faker.commerce.productDescription(),
-        quantity: faker.number.int({ min: 1, max: 10 }),
-        unitPrice: faker.number.int({ min: 500, max: 50000 }),
-        }))
+          description: faker.commerce.productDescription(),
+          quantity: faker.number.int({ min: 1, max: 10 }),
+          unitPrice: faker.number.int({ min: 500, max: 50000 }),
+        }));
 
-        const subTotal = items.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0)
-
-        const taxRate = 8 
-        const tax = Math.round(subTotal * taxRate);
+        const subTotal = items.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0);
+        const taxRate = 8;
+        const tax = Math.round(subTotal * (taxRate / 100)); // fixed
         const total = subTotal + tax;
 
         const invoice = await prisma.invoice.create({
           data: {
             userId: owner.id,
             clientId: client.id,
-            invoiceNumber: `INV-${String(invoiceCounter).padStart(4, '0')}`,
+            invoiceNumber: `INV-${String(userInvoiceCounter).padStart(4, '0')}`, // per-user
             subTotal,
             taxRate,
-            issueDate,
             tax,
             total,
+            issueDate,
             dueDate,
             status,
+            paidAt,  // set for PAID invoices
             paymentToken: faker.string.alphanumeric(24),
           },
         });
 
-        const isEmptyInvoice =
-          owner.id === regularUsers[0].id && c === 1 && i === 0;
-
+        const isEmptyInvoice = owner.id === regularUsers[0].id && c === 1 && i === 0;
         if (!isEmptyInvoice) {
           await prisma.invoiceItem.createMany({
-            data: items.map((it) => ({
-              ...it,
-              invoiceId: invoice.id,
-            })),
+            data: items.map((it) => ({ ...it, invoiceId: invoice.id })),
           });
         }
       }
@@ -321,14 +343,12 @@ async function main() {
   console.log("Invoice status breakdown:");
   statusBreakdown.forEach((s) => console.log(`  ${s.status}: ${s._count}`));
   console.log("----------------------------------------");
-  console.log("🔑 Login credentials (shared password for all credential users):");
+  console.log("🔑 Login credentials:");
   console.log(`   password: ${PASSWORD_PLAIN}`);
   console.log(`   admin:        admin@example.com`);
-  console.log(`   unverified:   unverified@example.com (emailVerified=false)`);
-  console.log(`   oauth-only:   oauth.only@example.com (no password, google provider)`);
-  regularUsers.forEach((u, i) =>
-    console.log(`   user ${i + 1}:       ${u.email}`)
-  );
+  console.log(`   unverified:   unverified@example.com`);
+  console.log(`   oauth-only:   oauth.only@example.com`);
+  regularUsers.forEach((u, idx) => console.log(`   user ${idx + 1}:       ${u.email}`));
   console.log("----------------------------------------");
 }
 
