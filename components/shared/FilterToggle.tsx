@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Button } from "../ui/button";
 
 const filters = ["All", "Sent", "Paid", "Overdue", "Draft"];
 
@@ -29,17 +30,17 @@ const FilterToggle = () => {
   return (
     <div className="flex flex-wrap gap-3 border-b border-zinc-200 p-6">
       {filters.map((filter) => (
-        <button
+        <Button
           key={filter}
           onClick={() => handleFilter(filter)}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+          className={` text-sm rounded-2xl  px-5 py-3 cursor-pointer  font-medium text-white shadow-sm transition hover:bg-[#16385f] font-medium  ${
             currentStatus === filter
-              ? "bg-black text-white"
+              ? "bg-[#0F2A4A] text-white"
               : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
           }`}
         >
           {filter}
-        </button>
+        </Button>
       ))}
     </div>
   );

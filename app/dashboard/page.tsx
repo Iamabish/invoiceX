@@ -9,42 +9,44 @@ import QuickActions from "@/components/dashboard/QuickAction";
 export default async function Dashboard() {
   return (
     <main className="min-h-screen bg-[#F7F9FC]">
-
-      <div className="mx-auto max-w-[1700px] px-10 py-8">
-
+      <div className="mx-auto max-w-[1700px] px-4 py-5 sm:px-6 lg:px-8 xl:px-10 xl:py-8">
         <DashboardHeader />
-        {/* Dashboard */}
-        <section className="mt-8 grid grid-cols-[320px_1fr_320px] gap-6">
 
-          {/* Left KPI Column */}
-          <aside className="sticky top-8">
-            <StatsCards />
-          </aside>
+        <section
+          className="
+            mt-6
+            grid
+            gap-6
 
-          {/* Main Content */}
-          <section className="space-y-6">
+            grid-cols-1
 
-            <RevenueChart />
+            
 
-            <RecentInvoices />
 
-          </section>
+            xl:grid-cols-4
+            2xl:grid-cols-[320px_1fr_320px]
+          "
+        >
+        <aside className="flex flex-col gap-6 xl:col-span-1 2xl:col-span-1">
+  <StatsCards />
 
-          {/* Right Sidebar */}
-          <aside className="space-y-6">
+    <div className="xl:mt-10 2xl:mt-0">
+      <QuickActions />
+    </div>
+    </aside>
 
-            <NeedsAttention />
+    <section className="space-y-6 xl:col-span-2 2xl:col-span-1">
+      <RevenueChart />
+      <RecentInvoices />
+    </section>
 
-            <TopClients />
-
-            <QuickActions />
-
-          </aside>
-
-        </section>
-
+    <aside className="space-y-6 xl:col-span-1 2xl:col-span-1">
+          <NeedsAttention />
+          <TopClients />
+    </aside>
+      </section>
+              
       </div>
-
     </main>
   );
 }

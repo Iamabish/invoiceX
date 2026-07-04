@@ -22,7 +22,6 @@ const navigation = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/dashboard/invoices", icon: FileText, label: "Invoices" },
   { href: "/dashboard/clients", icon: Users, label: "Clients" },
-  { href: "/dashboard/payments", icon: CreditCard, label: "Payments" },
   { href: "/dashboard/analytics", icon: TrendingUp, label: "Analytics" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
@@ -43,7 +42,6 @@ export default function SideBar({ user }: SidebarProps) {
   return (
     <TooltipProvider delayDuration={120}>
       <div className="flex h-full flex-col">
-        {/* Logo */}
         <div className="mb-8 flex items-center gap-3 px-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0F2A4A] text-white shadow-sm">
             <Zap className="h-5 w-5 fill-current" />
@@ -55,7 +53,6 @@ export default function SideBar({ user }: SidebarProps) {
           </div>
         </div>
 
-        {/* Floating Dock */}
         <aside className="flex w-[72px] flex-1 flex-col justify-between rounded-[34px] border border-slate-200 bg-white py-5 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
           <div className="flex flex-col items-center gap-3">
             {navigation.map((item) => {

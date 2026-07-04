@@ -34,69 +34,118 @@ export default function RevenueChartClient({ revenue }: RevenueChartClientProps)
   const totalRevenue = revenue.reduce((acc, curr) => acc + curr.revenue, 0);
 
   return (
-    <Card className="rounded-[34px] border border-slate-200/60 bg-white px-9 pt-8 pb-6 shadow-sm">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-[15px] font-medium text-slate-500">Revenue Overview</p>
+  <Card className="rounded-[28px] border border-slate-200/60 bg-white p-5 shadow-sm sm:rounded-[34px] sm:px-8 sm:py-7">
+    <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <p className="text-sm font-medium text-slate-500">
+          Revenue Overview
+        </p>
 
-          <h2 className="mt-2 text-[48px] font-bold tracking-tight leading-none text-slate-900">
-            ${Math.round(totalRevenue).toLocaleString()}
-          </h2>
+        <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-[42px]">
+          ${Math.round(totalRevenue).toLocaleString()}
+        </h2>
 
-          <div className="mt-3 flex items-center gap-2">
-            <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-              <ArrowUpRight className="h-3 w-3" />
-              12.4%
-            </span>
-            <span className="text-sm text-slate-400">compared with last month</span>
-          </div>
-        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className="text-sm font-semibold text-emerald-600">
+            +12.4%
+          </span>
 
-        <div className="flex rounded-full bg-slate-100 p-1.5">
-          <button className="rounded-full bg-[#0F2A4A] px-5 py-2 text-sm font-semibold text-white shadow-sm transition">
-            Monthly
-          </button>
-          <button className="rounded-full px-5 py-2 text-sm font-medium text-slate-500 transition hover:text-slate-700">
-            Yearly
-          </button>
+          <span className="text-sm text-slate-400">
+            compared with last month
+          </span>
         </div>
       </div>
 
-      <div className="mt-6 h-[300px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={revenue} margin={{ top: 0, right: 18, left: -28, bottom: 8 }}>
-            <defs>
-              <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#0F2A4A" stopOpacity={0.14} />
-                <stop offset="100%" stopColor="#0F2A4A" stopOpacity={0.01} />
-              </linearGradient>
-            </defs>
+      <div className="self-start rounded-full bg-slate-100 p-1">
+        <button className="rounded-full bg-sky-500 px-4 py-2 text-xs font-semibold text-white shadow-sm">
+          Monthly
+        </button>
 
-            <CartesianGrid vertical={false} horizontal stroke="#EAEFF5" strokeDasharray="5 5" />
-
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tick={{ fill: "#94A3B8", fontSize: 13, fontWeight: 500 }}
-            />
-
-            <YAxis hide />
-
-            <Tooltip cursor={false} content={<CustomTooltip />} />
-
-            <Area
-              type="monotone"
-              dataKey="revenue"
-              stroke="#0F2A4A"
-              strokeWidth={3}
-              fill="url(#revenueGradient)"
-              dot={false}
-              activeDot={{ r: 6, fill: "#0F2A4A", stroke: "#fff", strokeWidth: 3 }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <button className="rounded-full px-4 py-2 text-xs font-medium text-slate-500 transition hover:text-slate-700">
+          Yearly
+        </button>
       </div>
-    </Card>
-  );
+    </div>
+
+    <div className="mt-8 h-[260px] sm:h-[340px] lg:h-[410px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart
+          data={revenue}
+          margin={{
+            top: 15,
+            right: 5,
+            left: -10,
+            bottom: 0,
+          }}
+        >
+          <defs>
+            <linearGradient
+              id="revenueGradient"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="0%"
+                stopColor="#3B82F6"
+                stopOpacity={0.25}
+              />
+
+              <stop
+                offset="100%"
+                stopColor="#3B82F6"
+                stopOpacity={0}
+              />
+            </linearGradient>
+          </defs>
+
+          <CartesianGrid
+            vertical={false}
+            stroke="#EEF2F7"
+            strokeDasharray="4 4"
+          />
+
+          <XAxis
+            dataKey="month"
+            axisLine={false}
+            tickLine={false}
+            tick={{
+              fill: "#94A3B8",
+              fontSize: 12,
+              fontWeight: 500,
+            }}
+          />
+
+          <YAxis hide />
+
+          <Tooltip
+            cursor={false}
+            contentStyle={{
+              border: "none",
+              borderRadius: 18,
+              boxShadow: "0 18px 40px rgba(15,23,42,.12)",
+              padding: "12px 16px",
+            }}
+          />
+
+          <Area
+            type="natural"
+            dataKey="revenue"
+            stroke="#3B82F6"
+            strokeWidth={4}
+            fill="url(#revenueGradient)"
+            dot={false}
+            activeDot={{
+              r: 7,
+              fill: "#3B82F6",
+              stroke: "#fff",
+              strokeWidth: 4,
+            }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  </Card>
+);
 }
