@@ -1,4 +1,4 @@
-@import "tailwindcss";
+ @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -7,22 +7,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
+  
+  --font-sans: 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif';
+  --font-serif: 'Instrument Serif', 'Georgia', 'serif';
   --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
+  --color-primary: #009ace; /* Note the singular 'color' */
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -39,13 +28,101 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-ix-base: #fafafa;
+  --color-ix-surface: #ffffff;
+  --color-ix-elevated: #f4f4f4;
+  --color-ix-dark: #151515;
+  --color-ix-charcoal: #5a5a5a;
+  --color-ix-muted: #858585;
+  --color-ix-border: #e6e6e6;
+  
+  --color-ix-teal: #009ace;
+  --color-ix-teal-hover: #007fad;
+  --color-ix-teal-light: #c6e1e8;
+  --color-ix-teal-pale: #e8f4f7;
+  
+  --color-ix-status-paid: #10b981;
+  --color-ix-status-pending: #f59e0b;
+  --color-ix-status-overdue: #ef4444;
+  --color-ix-status-draft: #6b7280;
+  --color-ix-status-sent: #3b82f6;
+
+  --color-pastel-rose: #ffe4e6;
+  --color-pastel-sky: #e0f2fe;
+  --color-pastel-amber: #fef3c7;
+  --color-pastel-emerald: #d1fae5;
+  --color-pastel-violet: #ede9fe;
+  --color-pastel-cyan: #cffafe;
+  --color-pastel-orange: #ffedd5;
+  --color-pastel-lime: #ecfccb;
+
+  /* Exact Radius Mappings matched to your original formulas */
+  --radius-xs: calc(var(--radius) - 6px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-4xl: 32px;
+
+  /* Box Shadows */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-float: 0 12px 35px rgba(15, 23, 42, 0.06);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+
+  /* Keyframes & Animations */
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+  @keyframes caret-blink {
+    0%, 70%, 100% { opacity: 1; }
+    20%, 50% { opacity: 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  --animation-accordion-down: accordion-down 0.2s ease-out;
+  --animation-accordion-up: accordion-up 0.2s ease-out;
+  --animation-caret-blink: caret-blink 1.25s ease-out infinite;
+  --animation-float: float 4s ease-in-out infinite;
+  --animation-shimmer: shimmer 2s linear infinite;
+  --animation-pulse-dot: pulse-dot 2s ease-in-out infinite;
 }
 
 :root {
@@ -117,19 +194,39 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@layer components {
+  /* InvoiceX card surface — used for every panel/section on form + list pages */
+  .card-surface {
+    @apply bg-ix-surface border border-ix-border rounded-2xl shadow-card;
+  }
+
+  /* Small uppercase section label, e.g. "BILL TO", "LINE ITEMS" */
+  .ui-label {
+    @apply text-xs font-medium tracking-wider text-ix-muted uppercase;
+  }
+
+  /* Primary CTA — solid teal, used for "Send Invoice" */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-ix-teal text-white font-medium rounded-xl transition-colors hover:bg-ix-teal-hover disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  /* Secondary CTA — outlined/neutral, used for "Save as Draft" */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 bg-ix-elevated text-ix-dark font-medium rounded-xl border border-ix-border transition-colors hover:bg-ix-border/60;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-ix-base text-foreground;
   }
   html {
     @apply font-sans;
   }
 }
-
-
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

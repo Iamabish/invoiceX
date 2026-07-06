@@ -13,10 +13,9 @@ export default async function Home() {
   })
 
   
-
   console.log('user', user?.user);
+  console.log('this is home page');
   
-
 
   return (
    <>

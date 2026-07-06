@@ -14,11 +14,18 @@ export async function proxy(req : NextRequest) {
 
     const path = req.nextUrl.pathname
 
+    console.log('curren path', path);
+    
+
     const isProtectedRoute = path.startsWith('/dashboard')
-    const isPublicRoute = path === "/signin" || path === "/signup"
+    const isPublicRoute = path === "/signin" || path === "/signup" || path === "/"
     
 
     if(sessionCookie && isPublicRoute) {
+
+        console.log('push');
+        
+
         return NextResponse.redirect(
             new URL('/dashboard', req.url)
         )

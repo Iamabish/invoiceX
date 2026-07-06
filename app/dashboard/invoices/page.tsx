@@ -7,6 +7,7 @@ import { INVOICE_STATUS } from "@/app/generated/prisma";
 import FilterToggle from "@/components/shared/FilterToggle";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import NewInvoiceClientButton from "@/components/shared/NewInvoiceClientButton";
 
 const statusConfig: Record<string, { label: string; dot: string; text: string }> = {
   PAID: { label: "Paid", dot: "bg-emerald-500", text: "text-emerald-700" },
@@ -120,10 +121,7 @@ const Invoice = async ({ searchParams }: Props) => {
         </p>
       </div>
 
-      <Button className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0F2A4A] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-[#16385f] sm:w-auto">
-        <Plus className="h-4 w-4" />
-        New Invoice
-      </Button>
+     <NewInvoiceClientButton />
     </div>
 
     <div className="flex flex-col overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm sm:rounded-[30px]">

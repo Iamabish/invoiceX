@@ -12,7 +12,7 @@ export default async function DashboardLayout({
   });
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB]">
+    <div className="min-h-screen bg-accent">
       <div className="flex min-h-screen">
         <aside className="sticky top-0 flex h-screen w-[72px] shrink-0 ml-4 items-center">
           <SideBar user={user?.user} />
