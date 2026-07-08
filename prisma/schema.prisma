@@ -47,7 +47,7 @@ model Client {
 
 model Invoice {
   id              String         @id @default(uuid())
-  invoiceNumber   String 
+  invoiceNumber   String  
   userId          String
   subTotal        Int
   taxRate         Int @default(0)

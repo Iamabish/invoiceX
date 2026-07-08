@@ -7,52 +7,38 @@ import useDebounce from "@/app/hooks/useDebounce";
 import { useEffect, useState } from "react";
 
 const Search = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
 
-    const router = useRouter()
-    const searchParams = useSearchParams()
-    const pathName = usePathname()
-    const [search, setSearch] = useState(searchParams.get('search') ?? "")
+  const debounceSearch = useDebounce(search, 500);
 
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
 
-    console.log('search value', search);
-    
+    if (debounceSearch) {
+      params.set("search", debounceSearch);
+    } else {
+      params.delete("search");
+    }
 
-    const debounceSearch = useDebounce(search, 500)
-
-    useEffect(() => {
-
-        console.log('debounce value', debounceSearch);
-        
-
-        const params = new URLSearchParams(searchParams);
-
-        if (debounceSearch) {
-            params.set("search", debounceSearch);
-        } else {
-            params.delete("search");
-        }
-
-
-        console.log('params after update', params);
-        
-        router.replace(`${pathName}?${params.toString()}`);
-    }, [debounceSearch, pathName, router]);
+    router.replace(`${pathName}?${params.toString()}`);
+  }, [debounceSearch, pathName, router]);
 
   return (
-    <div className="relative w-full max-w-md " >
-      <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <div className="relative w-full max-w-md">
+      <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ix-charcoal" strokeWidth={1.5} />
 
       <Input
         type="text"
         value={search}
         placeholder="Search clients..."
         onChange={(e) => setSearch(e.target.value)}
-        className="h-11   rounded-xl border-border bg-background pl-10 pr-14 shadow-sm transition-all duration-200 placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/15"
+        className="h-11 rounded-xl border-ix-border bg-white pl-10 pr-14 text-sm text-ix-dark shadow-sm transition-all duration-200 placeholder:text-ix-charcoal/60 focus-visible:border-ix-teal focus-visible:ring-2 focus-visible:ring-ix-teal/15"
       />
 
-      <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1 rounded-md border bg-muted px-2 py-0.5text-[11px] font-medium text-muted-foreground">
-        ⌘K
-      </div>
+      
     </div>
   );
 };

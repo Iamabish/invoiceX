@@ -1,15 +1,14 @@
 "use client";
 
+import { SlidersHorizontal } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Button } from "../ui/button";
 
 const filters = ["All", "Sent", "Paid", "Overdue", "Draft"];
 
-
 const FilterToggle = () => {
-    const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const currentStatus = searchParams.get("status") || "All";
 
@@ -28,22 +27,23 @@ const FilterToggle = () => {
   };
 
   return (
-    <div className="flex flex-wrap gap-3 border-b border-zinc-200 p-6">
+    <div className="flex items-center gap-2 overflow-x-auto border-b border-ix-border p-4 sm:p-6">
+      <SlidersHorizontal className="h-4 w-4 flex-shrink-0 text-ix-muted" />
       {filters.map((filter) => (
-        <Button
+        <button
           key={filter}
           onClick={() => handleFilter(filter)}
-          className={` text-sm rounded-2xl  px-5 py-3 cursor-pointer  font-medium text-white shadow-sm transition hover:bg-[#16385f] font-medium  ${
+          className={`whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all ${
             currentStatus === filter
-              ? "bg-[#0F2A4A] text-white"
-              : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              ? "bg-ix-teal text-white"
+              : "border border-ix-border bg-ix-surface text-ix-charcoal hover:bg-ix-elevated"
           }`}
         >
           {filter}
-        </Button>
+        </button>
       ))}
     </div>
   );
-}
+};
 
-export default FilterToggle
+export default FilterToggle;
