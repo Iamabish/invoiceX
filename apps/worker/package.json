@@ -1,0 +1,27 @@
+{
+  "name": "@invoicex/worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run src/index.ts"
+  },
+  "dependencies": {
+    "@invoicex/db": "workspace:*",
+    "@invoicex/redis": "workspace:*",
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^1.x",
+    "bullmq": "^5.80.2",
+    "puppeteer": "^25.3.0",
+    "react": "^19.2.7",
+    "react-dom": "^19",
+    "resend": "^6.17.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
