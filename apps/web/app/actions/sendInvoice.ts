@@ -2,31 +2,49 @@
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { Resend } from "resend";
-import {Queue} from "bullmq"
-import {connection} from "@invoicex/redis"
-const resend = new Resend(process.env.RESEND_API_KEY);
+import  { emailQueue } from "@invoicex/redis"
 
 export async function sendInvoice(invoiceId: string) {
 
-
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user) {
-    throw new Error("Unauthorized");
-  }
-
-  const invoiceQueue = new Queue("email-queue", { connection })
-
-
-  await invoiceQueue.add('email-queue', {
-    invoiceId : invoiceId,
-    userId : session.user.id
-  })
+try {
+    console.log('at sendinvoice');
   
-  return {
-    success: true,
-  };
+    console.log('sendinvoice id', invoiceId);
+      
+  
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+  
+    const userId = session?.user.id
+  
+    console.log('userid', userId);
+    
+  
+    if (!session?.user) {
+      throw new Error("Unauthorized");
+    }
+  
+    
+    const job = await emailQueue.add('send-invoice-email', {
+      invoiceId,
+      userId
+    })
+
+
+    console.log('created job', job.id);
+    
+  
+    return {
+      success: true,
+    };
+
+
+
+} catch (error) {
+
+  console.log('Error ar send invoice', error);
+  
+  
+}
 }

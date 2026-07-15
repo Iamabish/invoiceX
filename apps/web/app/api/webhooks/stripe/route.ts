@@ -5,6 +5,9 @@ import { prisma } from "@invoicex/db"
 export  async function POST(req : NextRequest) {
 
     console.log('inside post webhook');
+
+    console.log('webhook secret', process.env.STRIPE_WEBHOOK_SECRET);
+    
   
     const body =  await req.text()
 
@@ -18,6 +21,9 @@ export  async function POST(req : NextRequest) {
       );
 
       if(event.type === "checkout.session.completed") {
+
+        console.log('inside checkout session completed');
+        
         const incoviceId = event.data.object.metadata?.invoiceId
 
         console.log('invoice Id ', incoviceId);
@@ -28,7 +34,7 @@ export  async function POST(req : NextRequest) {
             },
             data :{
                 status : "PAID",
-                paidAt : Date.now().toLocaleString(),
+                paidAt : new Date()
             }
         })  
       }

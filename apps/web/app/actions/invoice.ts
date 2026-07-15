@@ -98,8 +98,6 @@ export async function createInvoice( data: InvoiceFormValues) {
                 invoiceId : invoice.id
             }
         })
-
-
        }
 
        return invoice
@@ -108,14 +106,10 @@ export async function createInvoice( data: InvoiceFormValues) {
 
       console.log('final order', final_order);
 
-      
     } catch (error) {
 
         console.log('Create invoice error', error);
         throw error
 
     }
-
-    
-
 }

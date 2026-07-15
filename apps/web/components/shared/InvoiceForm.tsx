@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth"
-import prisma from "@/lib/prisma"
+import {prisma} from "@invoicex/db"
 import { headers } from "next/headers"
 import InvoiceFormClient from "./InvoiceFormClient"
 
@@ -27,9 +27,7 @@ const InvoiceForm = async () => {
 
   return (
     <div>InvoiceForm
-
-
-         <InvoiceFormClient clients={clients} />
+        <InvoiceFormClient clients={clients} />
     </div>
   )
 }

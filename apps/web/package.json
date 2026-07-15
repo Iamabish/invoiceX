@@ -1,5 +1,5 @@
 {
-    "name": "web",
+"name": "@invoicex/web",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -10,8 +10,8 @@
     },
     "dependencies": {
         "@hookform/resolvers": "^5.4.0",
-        "@invoicex/db": "*",
-        "@invoicex/redis": "*",
+       "@invoicex/db": "workspace:*",
+      "@invoicex/redis": "workspace:*",
         "@react-email/components": "^1.0.12",
         "@react-email/render": "^2.0.9",
         "@stripe/react-stripe-js": "^6.6.0",

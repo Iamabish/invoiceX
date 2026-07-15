@@ -42,12 +42,7 @@ export default async function generatePDF(invoice: InvoiceData) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  const templatePath = path.join(
-    process.cwd(),
-    "app",
-    "templates",
-    "invoice.html"
-  );
+const templatePath = path.join(__dirname, "../templates/invoice.html");
 
   console.log("template path:", templatePath);
 

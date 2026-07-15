@@ -3,6 +3,8 @@ import { prisma } from "@invoicex/db"
 import { NextRequest, NextResponse } from "next/server";
 import generatePDF from "@/app/utils/generatePDF";
 
+//need fix here 
+
 export async function GET(req  : NextRequest, 
    { params } :  { params : Promise<{id : string}> }
 ) {

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Invoice {{invoiceNumber}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    color: #111;
+    background: #fff;
+    padding: 48px 52px;
+    line-height: 1.6;
+  }
+
+  .inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 48px;
+  }
+
+  .inv-brand {
+    font-size: 22px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .inv-brand-sub {
+    font-size: 13px;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  .inv-title {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .inv-status {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+
+  .status-draft { background:#f0f0f0;color:#555; }
+  .status-sent { background:#E6F1FB;color:#185FA5; }
+  .status-paid { background:#EAF3DE;color:#3B6D11; }
+  .status-overdue { background:#FCEBEB;color:#A32D2D; }
+
+  .inv-number-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+    padding:14px 0;
+    margin-bottom:32px;
+  }
+
+  .label{
+    font-size:10px;
+    text-transform:uppercase;
+    color:#aaa;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+
+  .inv-dates{
+    display:flex;
+    gap:32px;
+  }
+
+  .inv-meta{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:40px;
+  }
+
+  .inv-party-name{
+    font-size:15px;
+    font-weight:600;
+  }
+
+  .inv-party-detail{
+    font-size:13px;
+    color:#666;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:24px;
+  }
+
+  thead tr{
+    border-bottom:1px solid #111;
+  }
+
+  thead th{
+    padding-bottom:10px;
+    font-size:10px;
+    text-transform:uppercase;
+    color:#888;
+    text-align:left;
+  }
+
+  thead th:not(:first-child){
+    text-align:right;
+  }
+
+  tbody tr{
+    border-bottom:1px solid #f3f3f3;
+  }
+
+  tbody td{
+    padding:13px 0;
+    font-size:13px;
+  }
+
+  tbody td:not(:first-child){
+    text-align:right;
+  }
+
+  .item-desc{
+    font-weight:600;
+  }
+
+  .inv-totals{
+    margin-left:auto;
+    width:260px;
+  }
+
+  .inv-total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+  }
+
+  .subtotal{
+    border-top:1px solid #eee;
+  }
+
+  .final{
+    border-top:1px solid #111;
+    margin-top:4px;
+    padding-top:12px;
+    font-size:16px;
+    font-weight:700;
+  }
+
+  .inv-notes{
+    margin-top:40px;
+    padding-top:24px;
+    border-top:1px solid #eee;
+  }
+
+  .inv-footer{
+    margin-top:48px;
+    padding-top:20px;
+    border-top:1px solid #eee;
+    display:flex;
+    justify-content:space-between;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="inv-header">
+  <div>
+    <div class="inv-brand">{{senderName}}</div>
+    <div class="inv-brand-sub">
+      {{senderEmail}} · {{senderPhone}}
+    </div>
+  </div>
+
+  <div style="text-align:right">
+    <div class="inv-title">INVOICE</div>
+    <div class="inv-status {{statusClass}}">
+      {{status}}
+    </div>
+  </div>
+</div>
+
+<div class="inv-number-row">
+  <div>
+    <div class="label">Invoice Number</div>
+    <div>{{invoiceNumber}}</div>
+  </div>
+
+  <div class="inv-dates">
+    <div>
+      <div class="label">Issue Date</div>
+      <div>{{issueDate}}</div>
+    </div>
+
+    <div>
+      <div class="label">Due Date</div>
+      <div>{{dueDate}}</div>
+    </div>
+  </div>
+</div>
+
+<div class="inv-meta">
+
+  <div>
+    <div class="label">From</div>
+    <div class="inv-party-name">{{senderName}}</div>
+  </div>
+
+  <div style="text-align:right">
+    <div class="label">Bill To</div>
+    <div class="inv-party-name">{{clientName}}</div>
+    <div class="inv-party-detail">{{clientEmail}}</div>
+    <div class="inv-party-detail">{{clientAddress}}</div>
+  </div>
+
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th style="width:50%">Description</th>
+<th>Qty</th>
+<th>Unit Price</th>
+<th>Amount</th>
+</tr>
+</thead>
+
+<tbody>
+{{items}}
+</tbody>
+
+</table>
+
+<div class="inv-totals">
+
+<div class="inv-total-row subtotal">
+<span>Subtotal</span>
+<span>{{subTotal}}</span>
+</div>
+
+<div class="inv-total-row">
+<span>Tax ({{taxRate}}%)</span>
+<span>{{tax}}</span>
+</div>
+
+<div class="inv-total-row final">
+<span>Total</span>
+<span>{{total}}</span>
+</div>
+
+</div>
+
+{{notesSection}}
+
+<div class="inv-footer">
+<div class="inv-footer-brand">InvoiceX</div>
+<div>Thank you for your business.</div>
+</div>
+
+</body>
+</html>

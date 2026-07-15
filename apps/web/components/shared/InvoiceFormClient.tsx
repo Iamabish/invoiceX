@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { createInvoice } from "@/app/actions/invoice";
+import SendInvoiceClientButton from "./SendInvoiceClientButton";
 
 export type LineItem = {
   description: string;
@@ -101,10 +102,13 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
   const total = subtotal + tax;
 
   async function onSubmit(data: InvoiceFormValues) {
+    console.log('at on submit');
+    
     console.log(data);
 
     try {
       await createInvoice(data);
+      
     } catch {
       // TODO: surface error state to the user
     }
@@ -385,13 +389,15 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
           </div>
 
           <div className="space-y-3">
-            <button
+
+
+         <button
               type="submit"
               disabled={isSubmitting}
               className="w-full btn-primary text-sm py-3 disabled:opacity-60"
             >
               Send Invoice
-            </button>
+            </button> 
             <button type="button" className="w-full btn-secondary text-sm py-3">
               Save as Draft
             </button>
