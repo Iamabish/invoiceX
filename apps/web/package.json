@@ -1,5 +1,5 @@
 {
-"name": "@invoicex/web",
+    "name": "@invoicex/web",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -10,12 +10,14 @@
     },
     "dependencies": {
         "@hookform/resolvers": "^5.4.0",
-       "@invoicex/db": "workspace:*",
-      "@invoicex/redis": "workspace:*",
+        "@invoicex/db": "workspace:*",
+        "@invoicex/redis": "workspace:*",
         "@react-email/components": "^1.0.12",
         "@react-email/render": "^2.0.9",
         "@stripe/react-stripe-js": "^6.6.0",
         "@stripe/stripe-js": "^9.8.0",
+        "@upstash/ratelimit": "^2.0.8",
+        "@upstash/redis": "^1.38.0",
         "bcryptjs": "^3.0.3",
         "better-auth": "^1.6.19",
         "bullmq": "^5.80.2",

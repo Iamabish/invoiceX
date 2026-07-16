@@ -1,11 +1,5 @@
 import IOREDIS from "ioredis"
 
-
-
-console.log("Process:", process.pid);
-console.log("REDIS_URL:", process.env.REDIS_URL);
-
-
 export const connection = new IOREDIS(process.env.REDIS_URL!, {
     maxRetriesPerRequest : null
 })

@@ -82,6 +82,7 @@ const notesSection = invoice.notes
 ` : "";
 
 
+
 html = html
   .replaceAll("{{invoiceNumber}}", invoice?.invoiceNumber ?? "")
   .replaceAll("{{status}}", invoice?.status ?? "")
