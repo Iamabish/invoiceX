@@ -43,7 +43,8 @@ try {
 
 } catch (error) {
 
-  console.log('Error ar send invoice', error);
+  console.log('Send Invoice error', error);
+  throw error
   
   
 }

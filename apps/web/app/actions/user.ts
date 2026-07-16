@@ -16,7 +16,6 @@ export async function updateProfile(data: {
 
     return {
       success: true,
-      error: null,
     };
   } catch (err) {
     return {
@@ -46,7 +45,6 @@ export async function changePassword(data: {
 
       return {
       success: true,
-      error: null,
     };
 
 
@@ -73,7 +71,6 @@ export async function deleteAccount(data: {
      })
       return {
       success: true,
-      error: null,
     };
  }  catch (err) {
     return {

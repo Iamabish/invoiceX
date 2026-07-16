@@ -60,6 +60,7 @@ model Invoice {
   notes           String?
   status          INVOICE_STATUS @default(DRAFT)
   paymentToken    String? @unique
+  sentAt          DateTime?
   paidAt          DateTime?
   reminderSentAt  DateTime?
   clientId        String

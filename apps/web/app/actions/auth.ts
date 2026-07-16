@@ -25,12 +25,10 @@ export async  function signUp(formData : FormData) {
                 email
             }
         })
-
         console.log('res', res);
-        
-
     } catch (error) {
-        console.log('error', error);
+        console.log('Signup error', error);
+        throw error
     }
 
     redirect('/')
@@ -52,10 +50,11 @@ export async function signIn(formData : FormData) {
                 password
             }
         })
-
+        
         console.log('res', res);
     } catch (error) {
-        console.log('error', error);
+        console.log('Signin error', error);
+        throw error
         
     }
 

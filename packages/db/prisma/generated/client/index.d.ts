@@ -4033,6 +4033,7 @@ export namespace Prisma {
     notes: string | null
     status: $Enums.INVOICE_STATUS | null
     paymentToken: string | null
+    sentAt: Date | null
     paidAt: Date | null
     reminderSentAt: Date | null
     clientId: string | null
@@ -4053,6 +4054,7 @@ export namespace Prisma {
     notes: string | null
     status: $Enums.INVOICE_STATUS | null
     paymentToken: string | null
+    sentAt: Date | null
     paidAt: Date | null
     reminderSentAt: Date | null
     clientId: string | null
@@ -4073,6 +4075,7 @@ export namespace Prisma {
     notes: number
     status: number
     paymentToken: number
+    sentAt: number
     paidAt: number
     reminderSentAt: number
     clientId: number
@@ -4109,6 +4112,7 @@ export namespace Prisma {
     notes?: true
     status?: true
     paymentToken?: true
+    sentAt?: true
     paidAt?: true
     reminderSentAt?: true
     clientId?: true
@@ -4129,6 +4133,7 @@ export namespace Prisma {
     notes?: true
     status?: true
     paymentToken?: true
+    sentAt?: true
     paidAt?: true
     reminderSentAt?: true
     clientId?: true
@@ -4149,6 +4154,7 @@ export namespace Prisma {
     notes?: true
     status?: true
     paymentToken?: true
+    sentAt?: true
     paidAt?: true
     reminderSentAt?: true
     clientId?: true
@@ -4256,6 +4262,7 @@ export namespace Prisma {
     notes: string | null
     status: $Enums.INVOICE_STATUS
     paymentToken: string | null
+    sentAt: Date | null
     paidAt: Date | null
     reminderSentAt: Date | null
     clientId: string
@@ -4295,6 +4302,7 @@ export namespace Prisma {
     notes?: boolean
     status?: boolean
     paymentToken?: boolean
+    sentAt?: boolean
     paidAt?: boolean
     reminderSentAt?: boolean
     clientId?: boolean
@@ -4320,6 +4328,7 @@ export namespace Prisma {
     notes?: boolean
     status?: boolean
     paymentToken?: boolean
+    sentAt?: boolean
     paidAt?: boolean
     reminderSentAt?: boolean
     clientId?: boolean
@@ -4342,6 +4351,7 @@ export namespace Prisma {
     notes?: boolean
     status?: boolean
     paymentToken?: boolean
+    sentAt?: boolean
     paidAt?: boolean
     reminderSentAt?: boolean
     clientId?: boolean
@@ -4364,6 +4374,7 @@ export namespace Prisma {
     notes?: boolean
     status?: boolean
     paymentToken?: boolean
+    sentAt?: boolean
     paidAt?: boolean
     reminderSentAt?: boolean
     clientId?: boolean
@@ -4371,7 +4382,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNumber" | "userId" | "subTotal" | "taxRate" | "tax" | "total" | "issueDate" | "dueDate" | "notes" | "status" | "paymentToken" | "paidAt" | "reminderSentAt" | "clientId" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNumber" | "userId" | "subTotal" | "taxRate" | "tax" | "total" | "issueDate" | "dueDate" | "notes" | "status" | "paymentToken" | "sentAt" | "paidAt" | "reminderSentAt" | "clientId" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     client?: boolean | ClientDefaultArgs<ExtArgs>
     invoiceItems?: boolean | Invoice$invoiceItemsArgs<ExtArgs>
@@ -4409,6 +4420,7 @@ export namespace Prisma {
       notes: string | null
       status: $Enums.INVOICE_STATUS
       paymentToken: string | null
+      sentAt: Date | null
       paidAt: Date | null
       reminderSentAt: Date | null
       clientId: string
@@ -4853,6 +4865,7 @@ export namespace Prisma {
     readonly notes: FieldRef<"Invoice", 'String'>
     readonly status: FieldRef<"Invoice", 'INVOICE_STATUS'>
     readonly paymentToken: FieldRef<"Invoice", 'String'>
+    readonly sentAt: FieldRef<"Invoice", 'DateTime'>
     readonly paidAt: FieldRef<"Invoice", 'DateTime'>
     readonly reminderSentAt: FieldRef<"Invoice", 'DateTime'>
     readonly clientId: FieldRef<"Invoice", 'String'>
@@ -10879,6 +10892,7 @@ export namespace Prisma {
     notes: 'notes',
     status: 'status',
     paymentToken: 'paymentToken',
+    sentAt: 'sentAt',
     paidAt: 'paidAt',
     reminderSentAt: 'reminderSentAt',
     clientId: 'clientId',
@@ -11261,6 +11275,7 @@ export namespace Prisma {
     notes?: StringNullableFilter<"Invoice"> | string | null
     status?: EnumINVOICE_STATUSFilter<"Invoice"> | $Enums.INVOICE_STATUS
     paymentToken?: StringNullableFilter<"Invoice"> | string | null
+    sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     reminderSentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     clientId?: StringFilter<"Invoice"> | string
@@ -11285,6 +11300,7 @@ export namespace Prisma {
     notes?: SortOrderInput | SortOrder
     status?: SortOrder
     paymentToken?: SortOrderInput | SortOrder
+    sentAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     reminderSentAt?: SortOrderInput | SortOrder
     clientId?: SortOrder
@@ -11313,6 +11329,7 @@ export namespace Prisma {
     dueDate?: DateTimeFilter<"Invoice"> | Date | string
     notes?: StringNullableFilter<"Invoice"> | string | null
     status?: EnumINVOICE_STATUSFilter<"Invoice"> | $Enums.INVOICE_STATUS
+    sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     reminderSentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     clientId?: StringFilter<"Invoice"> | string
@@ -11337,6 +11354,7 @@ export namespace Prisma {
     notes?: SortOrderInput | SortOrder
     status?: SortOrder
     paymentToken?: SortOrderInput | SortOrder
+    sentAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     reminderSentAt?: SortOrderInput | SortOrder
     clientId?: SortOrder
@@ -11365,6 +11383,7 @@ export namespace Prisma {
     notes?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     status?: EnumINVOICE_STATUSWithAggregatesFilter<"Invoice"> | $Enums.INVOICE_STATUS
     paymentToken?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    sentAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     reminderSentAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     clientId?: StringWithAggregatesFilter<"Invoice"> | string
@@ -11927,6 +11946,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     createdAt?: Date | string
@@ -11950,6 +11970,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     clientId: string
@@ -11971,6 +11992,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11994,6 +12016,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientId?: StringFieldUpdateOperationsInput | string
@@ -12016,6 +12039,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     clientId: string
@@ -12035,6 +12059,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12054,6 +12079,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientId?: StringFieldUpdateOperationsInput | string
@@ -12759,6 +12785,7 @@ export namespace Prisma {
     notes?: SortOrder
     status?: SortOrder
     paymentToken?: SortOrder
+    sentAt?: SortOrder
     paidAt?: SortOrder
     reminderSentAt?: SortOrder
     clientId?: SortOrder
@@ -12786,6 +12813,7 @@ export namespace Prisma {
     notes?: SortOrder
     status?: SortOrder
     paymentToken?: SortOrder
+    sentAt?: SortOrder
     paidAt?: SortOrder
     reminderSentAt?: SortOrder
     clientId?: SortOrder
@@ -12806,6 +12834,7 @@ export namespace Prisma {
     notes?: SortOrder
     status?: SortOrder
     paymentToken?: SortOrder
+    sentAt?: SortOrder
     paidAt?: SortOrder
     reminderSentAt?: SortOrder
     clientId?: SortOrder
@@ -13793,6 +13822,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     createdAt?: Date | string
@@ -13814,6 +13844,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     clientId: string
@@ -13961,6 +13992,7 @@ export namespace Prisma {
     notes?: StringNullableFilter<"Invoice"> | string | null
     status?: EnumINVOICE_STATUSFilter<"Invoice"> | $Enums.INVOICE_STATUS
     paymentToken?: StringNullableFilter<"Invoice"> | string | null
+    sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     reminderSentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     clientId?: StringFilter<"Invoice"> | string
@@ -14015,6 +14047,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     createdAt?: Date | string
@@ -14037,6 +14070,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     createdAt?: Date | string
@@ -14373,6 +14407,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     createdAt?: Date | string
@@ -14395,6 +14430,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     clientId: string
@@ -14431,6 +14467,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14453,6 +14490,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientId?: StringFieldUpdateOperationsInput | string
@@ -14473,6 +14511,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     createdAt?: Date | string
@@ -14495,6 +14534,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     clientId: string
@@ -14531,6 +14571,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14553,6 +14594,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientId?: StringFieldUpdateOperationsInput | string
@@ -14761,6 +14803,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     clientId: string
@@ -14890,6 +14933,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14911,6 +14955,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientId?: StringFieldUpdateOperationsInput | string
@@ -14932,6 +14977,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientId?: StringFieldUpdateOperationsInput | string
@@ -14952,6 +14998,7 @@ export namespace Prisma {
     notes?: string | null
     status?: $Enums.INVOICE_STATUS
     paymentToken?: string | null
+    sentAt?: Date | string | null
     paidAt?: Date | string | null
     reminderSentAt?: Date | string | null
     createdAt?: Date | string
@@ -14970,6 +15017,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14992,6 +15040,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15013,6 +15062,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumINVOICE_STATUSFieldUpdateOperationsInput | $Enums.INVOICE_STATUS
     paymentToken?: NullableStringFieldUpdateOperationsInput | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -41,7 +41,7 @@ export async function addClient(fomrData : FormData) {
 
 
     }catch(err) {
-        console.log('error', err);
+        console.log('Create client', err);
         throw err
     }
 
@@ -91,8 +91,7 @@ export async function editClient(clientId : string, fomrData : FormData) {
 
 
     }catch(err) {
-
-        console.log('error', err);
+        console.log('Edit Client error', err);
         throw err
 
     }
@@ -105,7 +104,8 @@ export async function deleteClient(clientId : string) {
 
     const user = await auth.api.getSession({
     headers : await headers()
-})
+    
+    })
 
 
 console.log('at delete client ');

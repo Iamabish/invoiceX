@@ -18,6 +18,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { createInvoice } from "@/app/actions/invoice";
 import SendInvoiceClientButton from "./SendInvoiceClientButton";
+import { sendInvoice } from "@/app/actions/sendInvoice";
 
 export type LineItem = {
   description: string;
@@ -101,21 +102,29 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
   const tax = subtotal * (Number(taxRate || 0) / 100);
   const total = subtotal + tax;
 
-  async function onSubmit(data: InvoiceFormValues) {
-    console.log('at on submit');
-    
+  async function onSubmit(data: InvoiceFormValues, action: 'send' | 'draft') {
+    console.log('at on submit', action);
     console.log(data);
 
     try {
-      await createInvoice(data);
-      
-    } catch {
-      // TODO: surface error state to the user
+      const invoice = await createInvoice(data);
+
+      if (action === 'send') {
+        await sendInvoice(invoice.id);
+      }
+
+      // TODO: toast/redirect here — e.g.
+      // toast.success(action === 'send' ? 'Invoice queued for sending' : 'Draft saved');
+      // router.push(`/invoices/${invoice.id}`);
+
+    } catch (err) {
+      console.error('invoice submit failed', err);
+      // TODO: toast.error('Something went wrong, please try again');
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+    <form className="grid grid-cols-1 lg:grid-cols-5 gap-6">
       <div className="lg:col-span-3 space-y-6">
         <div className="card-surface p-6">
           <label className="ui-label mb-3 block">BILL TO</label>
@@ -392,15 +401,22 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
 
 
          <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full btn-primary text-sm py-3 disabled:opacity-60"
-            >
-              Send Invoice
-            </button> 
-            <button type="button" className="w-full btn-secondary text-sm py-3">
-              Save as Draft
-            </button>
+            type="button"
+            disabled={isSubmitting}
+            onClick={handleSubmit((data) => onSubmit(data, 'send'))}
+            className="w-full btn-primary text-sm py-3 disabled:opacity-60"
+          >
+            Send Invoice
+          </button>
+
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={handleSubmit((data) => onSubmit(data, 'draft'))}
+            className="w-full btn-secondary text-sm py-3"
+          >
+            Save as Draft
+          </button>
           </div>
         </div>
       </div>
