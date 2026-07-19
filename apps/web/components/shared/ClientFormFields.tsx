@@ -63,52 +63,48 @@ formState: { errors, isSubmitting },
 
 
   const onSubmit = async (data: FormValues) => {
+    const formData = new FormData();
 
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('company', data.company ?? '');
+    formData.append('phone', data.phone ?? '');
+    formData.append('address', data.address ?? '');
 
-    try {
-      const formData = new FormData();
+    let result;
 
-        formData.append("name", data.name);
-        formData.append("email", data.email);
-        formData.append("company", data.company ?? "");
-        formData.append("phone", data.phone ?? "");
-        formData.append("address", data.address ?? "");
+    if (isEditing) {
+      result = await editClient(client.id, formData);
+    } else {
+      result = await addClient(formData);
+    }
 
-        if (isEditing) {
-            await editClient(client.id, formData);
+    if (result.success) {
+      toast.success(result.message);
 
-            toast.success("Client updated successfully");
-            reset();
-            onClose();
-
-            } else {
-            await addClient(formData);
-
-            toast.success("Client created successfully");
-            reset();
-            onClose();
-            }
-
-    } catch (error) {
-      console.error("Failed to create client:", error);
+      reset();
+      onClose();
+    } else {
+      toast.error(result.error);
     }
   };
 
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 p-8"
-    >
+ return (
+  <form
+    onSubmit={handleSubmit(onSubmit)}
+    className="space-y-6"
+  >
+    <div className="card-surface p-6 space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-900">
+          <label className="ui-label block">
             Name <span className="text-red-500">*</span>
           </label>
 
           <Input
             placeholder="John Doe"
-            className="h-11 rounded-xl"
-            {...register("name")}
+            className="h-11 rounded-xl border-0 bg-ix-elevated text-ix-dark placeholder:text-ix-muted focus-visible:ring-2 focus-visible:ring-ix-teal/20"
+            {...register('name')}
           />
 
           {errors.name && (
@@ -119,15 +115,15 @@ formState: { errors, isSubmitting },
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-900">
+          <label className="ui-label block">
             Email <span className="text-red-500">*</span>
           </label>
 
           <Input
             type="email"
             placeholder="john@example.com"
-            className="h-11 rounded-xl"
-            {...register("email")}
+            className="h-11 rounded-xl border-0 bg-ix-elevated text-ix-dark placeholder:text-ix-muted focus-visible:ring-2 focus-visible:ring-ix-teal/20"
+            {...register('email')}
           />
 
           {errors.email && (
@@ -138,14 +134,12 @@ formState: { errors, isSubmitting },
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-900">
-            Company
-          </label>
+          <label className="ui-label block">Company</label>
 
           <Input
             placeholder="Acme Inc."
-            className="h-11 rounded-xl"
-            {...register("company")}
+            className="h-11 rounded-xl border-0 bg-ix-elevated text-ix-dark placeholder:text-ix-muted focus-visible:ring-2 focus-visible:ring-ix-teal/20"
+            {...register('company')}
           />
 
           {errors.company && (
@@ -156,14 +150,12 @@ formState: { errors, isSubmitting },
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-900">
-            Phone
-          </label>
+          <label className="ui-label block">Phone</label>
 
           <Input
-            placeholder="+1 (555) 123-4567"
-            className="h-11 rounded-xl"
-            {...register("phone")}
+            placeholder="+91 98765 43210"
+            className="h-11 rounded-xl border-0 bg-ix-elevated text-ix-dark placeholder:text-ix-muted focus-visible:ring-2 focus-visible:ring-ix-teal/20"
+            {...register('phone')}
           />
 
           {errors.phone && (
@@ -174,15 +166,13 @@ formState: { errors, isSubmitting },
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-medium text-zinc-900">
-            Address
-          </label>
+          <label className="ui-label block">Address</label>
 
           <Textarea
             placeholder="221B Baker Street, London"
-            rows={5}
-            className="min-h-[120px] resize-none rounded-xl"
-            {...register("address")}
+            rows={4}
+            className="min-h-[120px] resize-none rounded-xl border-0 bg-ix-elevated text-ix-dark placeholder:text-ix-muted focus-visible:ring-2 focus-visible:ring-ix-teal/20"
+            {...register('address')}
           />
 
           {errors.address && (
@@ -193,11 +183,11 @@ formState: { errors, isSubmitting },
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 border-t border-zinc-200 pt-6">
+      <div className="flex items-center justify-end gap-3 border-t border-ix-border pt-6">
         <Button
           type="button"
           variant="outline"
-          className="rounded-xl"
+          className="rounded-xl border-ix-border bg-transparent text-ix-charcoal hover:bg-ix-elevated"
           onClick={onClose}
         >
           Cancel
@@ -205,16 +195,20 @@ formState: { errors, isSubmitting },
 
         <Button
           type="submit"
+          variant={"ghost"}
           disabled={isSubmitting}
-          className="rounded-xl bg-black px-6 hover:bg-zinc-800 disabled:opacity-50"
+          className="btn-primary rounded-xl px-6 disabled:opacity-60"
         >
           {isSubmitting
-            ? "Saving..."
+            ? isEditing
+              ? 'Updating...'
+              : 'Saving...'
             : isEditing
-            ? "Update Client"
-            : "Save Client"}
+            ? 'Update Client'
+            : 'Save Client'}
         </Button>
       </div>
-    </form>
-  );
+    </div>
+  </form>
+);
 }

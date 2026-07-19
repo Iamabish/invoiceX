@@ -51,20 +51,26 @@ export default function ClientActions({
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
-const handleDelete = () => {
-  startTransition(async () => {
+  const handleDelete = async () => {
+    setIsPending(true)
+
     try {
-      await deleteClient(client.id);
+      const result = await deleteClient(client.id)
 
-      toast.success("Client deleted successfully");
-      setDeleteOpen(false);
+      if (result.success) {
+        toast.success(result.message)
+        setDeleteOpen(false)
+      } else {
+        toast.error(result.error)
+      }
     } catch (error) {
-      toast.error("Failed to delete client");
+      toast.error('Something went wrong')
+    } finally {
+      setIsPending(false)
     }
-  });
-};
+  }
 
   return (
     <>

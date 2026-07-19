@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import { CalendarDays, Plus } from "lucide-react";
 import { headers } from "next/headers";
+import NewInvoiceClientButton from "../shared/NewInvoiceClientButton";
 
 export default async function DashboardHeader() {
   const user = await auth.api.getSession({
@@ -36,10 +37,7 @@ export default async function DashboardHeader() {
           <span>{today}</span>
         </div>
 
-        <Button className="h-12 rounded-2xl bg-[#0F2A4A] px-6 text-white shadow-sm transition hover:bg-[#16385f]">
-          <Plus className="mr-2 h-4 w-4" />
-          New Invoice
-        </Button>
+        <NewInvoiceClientButton />
       </div>
     </header>
   );

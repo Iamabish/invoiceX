@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import {prisma} from "@invoicex/db"
 import { Eye, FileText } from "lucide-react";
 import { headers } from "next/headers";
-import { INVOICE_STATUS } from "@/app/generated/prisma";
+import  { INVOICE_STATUS }  from "@invoicex/db"
 import FilterToggle from "@/components/shared/FilterToggle";
 import Link from "next/link";
 import NewInvoiceClientButton from "@/components/shared/NewInvoiceClientButton";
@@ -227,7 +227,6 @@ const Invoice = async ({ searchParams }: Props) => {
           </table>
         </div>
 
-        {/* Pagination */}
         <div className="flex flex-col gap-4 border-t border-ix-border p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <p className="text-sm text-ix-charcoal">{total} invoices total</p>
 

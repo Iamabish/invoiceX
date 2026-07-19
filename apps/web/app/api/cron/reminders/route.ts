@@ -1,4 +1,4 @@
-import { sendInvoice } from "@/app/actions/sendInvoice";
+import { sendInvoice } from "@/app/actions/invoice"
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@invoicex/db"
 

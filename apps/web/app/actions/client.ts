@@ -1,140 +1,193 @@
-"use server"
-import { auth } from "@/lib/auth"
-import {prisma} from "@invoicex/db"
-import { revalidatePath } from "next/cache"
-import { headers } from "next/headers"
+'use server'
 
+import { auth } from '@/lib/auth'
+import { Prisma, prisma } from '@invoicex/db'
+import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
 
-export async function addClient(fomrData : FormData) {
-
+export async function addClient(formData: FormData) {
+  try {
     const user = await auth.api.getSession({
-    headers : await headers()
+      headers: await headers(),
     })
 
-    try {
-
-        console.log('at add client ');
-        
-        
-    const name = fomrData.get("name") as string
-    const email = fomrData.get("email") as string
-    const company = fomrData.get("company") as string
-    const phone = fomrData.get("phone") as string
-    const address = fomrData.get("address") as string
-
-    console.log(name);
-    console.log(email);
-    console.log(company);
-    
-    const client = await prisma.client.create({
-        data :{
-            name,
-            email,
-            company,
-            userId : user?.user.id!,
-            phone : phone,
-            address : address,
-        }
-    })
-
-    console.log('new client', client)
-
-
-    }catch(err) {
-        console.log('Create client', err);
-        throw err
+    if (!user?.user) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      }
     }
 
+    const name = formData.get('name') as string
+    const email = formData.get('email') as string
+    const company = formData.get('company') as string
+    const phone = formData.get('phone') as string
+    const address = formData.get('address') as string
 
-    revalidatePath('/daashboard/clients')
-}
-
-export async function editClient(clientId : string, fomrData : FormData) {
-
-    const user = await auth.api.getSession({
-    headers : await headers()
-})
-
-
-    try {
-        const name = fomrData.get("name") as string
-        const email = fomrData.get("email") as string
-        const company = fomrData.get("company") as string
-        const phone = fomrData.get("phone") as string
-        const address = fomrData.get("address") as string
-    
-
-    const isClient = await prisma.client.findUnique({
-        where :{
-            id : clientId,
-            userId : user?.user.id
-        }
+    const client = await prisma.client.create({
+      data: {
+        name,
+        email,
+        company,
+        phone,
+        address,
+        userId: user.user.id,
+      },
     })
 
-    if(!isClient) {
-        throw new Error('Invalid operaton')
+    revalidatePath('/dashboard/clients')
+
+    return {
+      success: true,
+      message: 'Client created successfully',
+      data: client,
+    }
+  } catch (err) {
+    console.log('Create client error', err)
+
+    return {
+      success: false,
+      error:
+        err instanceof Error
+          ? err.message
+          : 'Failed to create client',
+    }
+  }
+}
+
+export async function editClient(clientId: string, formData: FormData) {
+  try {
+    const user = await auth.api.getSession({
+      headers: await headers(),
+    })
+
+    if (!user?.user) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      }
+    }
+
+    const name = formData.get('name') as string
+    const email = formData.get('email') as string
+    const company = formData.get('company') as string
+    const phone = formData.get('phone') as string
+    const address = formData.get('address') as string
+
+    const isClient = await prisma.client.findFirst({
+      where: {
+        id: clientId,
+        userId: user.user.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!isClient) {
+      return {
+        success: false,
+        error: 'Client not found',
+      }
     }
 
     const client = await prisma.client.update({
-        where :{
-            id : isClient.id
-        },
-        data :{
-            name : name,
-            email : email,
-            company : company,
-            phone : phone,
-            address : address
-        }
+      where: {
+        id: isClient.id,
+      },
+      data: {
+        name,
+        email,
+        company,
+        phone,
+        address,
+      },
     })
 
+    revalidatePath('/dashboard/clients')
 
-
-    }catch(err) {
-        console.log('Edit Client error', err);
-        throw err
-
+    return {
+      success: true,
+      message: 'Client updated successfully',
+      data: client,
     }
+  } catch (err) {
+    console.log('Edit client error', err)
 
-    
-    revalidatePath('/daashboard/clients')
+    return {
+      success: false,
+      error:
+        err instanceof Error
+          ? err.message
+          : 'Failed to update client',
+    }
+  }
 }
 
-export async function deleteClient(clientId : string) {
-
+export async function deleteClient(clientId: string) {
+  try {
     const user = await auth.api.getSession({
-    headers : await headers()
-    
+      headers: await headers(),
     })
 
-
-console.log('at delete client ');
-
-
-    try {
-    
-        const isClient = await prisma.client.findUnique({
-            where :{
-                id : clientId,
-                userId : user?.user.id
-            }
-        })
-    
-        if(!isClient) {
-            throw new Error('Invalid operaton')
-        }
-    
-        await prisma.client.delete({where : {id : clientId}})
-        
- 
-    
-
-    } catch (err) {
-        console.log('err', err);
-        throw err
-        
+    if (!user?.user) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      }
     }
 
+    const isClient = await prisma.client.findFirst({
+      where: {
+        id: clientId,
+        userId: user.user.id,
+      },
+      select: {
+        id: true,
+      },
+    })
 
-    revalidatePath('/daashboard/clients')
-}
+    if (!isClient) {
+      return {
+        success: false,
+        error: 'Client not found',
+      }
+    }
+
+    await prisma.client.delete({
+      where: {
+        id: isClient.id,
+      },
+    })
+
+    revalidatePath('/dashboard/clients')
+
+    return {
+      success: true,
+      message: 'Client deleted successfully',
+      data: null,
+    }
+  } catch (err) {
+    console.log('Delete client error', err)
+
+
+    if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2003'
+    ) {
+        return {
+        success: false,
+        error:
+            'Cannot delete this client because invoices are associated with it. Delete the invoices first.',
+        }
+    }
+
+    return {
+        success: false,
+        error:
+        err instanceof Error
+            ? err.message
+            : 'Failed to delete client',
+    }
+    }
+  }

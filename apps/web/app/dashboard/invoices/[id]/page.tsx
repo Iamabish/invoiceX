@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import InvoiceDownloadButton from "@/components/shared/InvoiceDownloadButton";
 import SendInvoiceClientButton from "@/components/shared/SendInvoiceClientButton";
+import DeleteInvoiceClientButton from "@/components/shared/DeleteInvoiceClientButton";
 
 const statusConfig: Record<string, { label: string; dot: string; text: string; bg: string }> = {
   PAID: { label: "Paid", dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50" },
@@ -112,13 +113,7 @@ const InvoiceDetailPage = async ({
         <SendInvoiceClientButton invoiceId={id} />
 
         {invoice.status === "DRAFT" && (
-          <Button
-            variant="destructive"
-            className="gap-2 rounded-2xl"
-          >
-            <Trash2 className="h-4 w-4" />
-            Delete
-          </Button>
+          <DeleteInvoiceClientButton  invoiceId={id}/>
         )}
       </div>
     </div>

@@ -17,8 +17,9 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { createInvoice } from "@/app/actions/invoice";
-import SendInvoiceClientButton from "./SendInvoiceClientButton";
-import { sendInvoice } from "@/app/actions/sendInvoice";
+import { sendInvoice } from "@/app/actions/invoice"
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export type LineItem = {
   description: string;
@@ -54,6 +55,9 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
     const [clientOpen, setClientOpen] = useState(false);
     const [issueDateOpen, setIssueDateOpen] = useState(false);
     const [dueDateOpen, setDueDateOpen] = useState(false);
+
+  const router = useRouter()
+
   const {
     register,
     control,
@@ -79,6 +83,7 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
     },
   });
 
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
@@ -102,26 +107,39 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
   const tax = subtotal * (Number(taxRate || 0) / 100);
   const total = subtotal + tax;
 
-  async function onSubmit(data: InvoiceFormValues, action: 'send' | 'draft') {
-    console.log('at on submit', action);
-    console.log(data);
-
+   async function onSubmit(data: InvoiceFormValues, action: 'send' | 'draft') {
     try {
       const invoice = await createInvoice(data);
 
-      if (action === 'send') {
-        await sendInvoice(invoice.id);
+      if (!invoice?.data?.id) {
+        toast.error("Something went wrong creating the invoice. Please try again.");
+        return;
       }
 
-      // TODO: toast/redirect here — e.g.
-      // toast.success(action === 'send' ? 'Invoice queued for sending' : 'Draft saved');
-      // router.push(`/invoices/${invoice.id}`);
+      if (action === 'send') {
+        try {
+          await sendInvoice(invoice.data.id);
+          toast.success("Invoice queued for sending");
+        } catch (sendErr) {
+          console.error('send invoice failed', sendErr);
+          toast.warning("Invoice saved, but sending failed — you can retry from the invoice page");
+          router.push(`/invoices/${invoice.data.id}`);
+          return;
+        }
+      } else {
+        toast.success("Draft saved");
+      }
+
+      router.push(`/invoices/${invoice.data.id}`);
 
     } catch (err) {
       console.error('invoice submit failed', err);
-      // TODO: toast.error('Something went wrong, please try again');
+      toast.error("Failed to save invoice. Please check the form and try again.");
     }
   }
+
+  
+
 
   return (
     <form className="grid grid-cols-1 lg:grid-cols-5 gap-6">

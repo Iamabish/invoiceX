@@ -1,23 +1,41 @@
-"use client";
+'use client'
 
-import { sendInvoice } from "@/app/actions/sendInvoice"
-import { Button } from '../ui/button';
-import { Send } from "lucide-react";
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Send, Loader2 } from 'lucide-react'
+import { Button } from '../ui/button'
+import { sendInvoice } from '@/app/actions/invoice'
 
-const SendInvoiceClientButton = ({invoiceId} : {invoiceId : string}) => {
-  return <Button
-  onClick={async () => {
-    await sendInvoice(invoiceId);
-  }}
->
-    <Send  className="h-4 w-4"/>
-  Send Invoice
-</Button>
+export default function SendInvoiceClientButton({
+  invoiceId,
+}: {
+  invoiceId: string
+}) {
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e) {
+    e.prevenetDefault()
+    setLoading(true)
+
+    const result = await sendInvoice(invoiceId)
+
+    if (result.success) {
+      toast.success(result.message)
+    } else {
+      toast.error(result.error)
+    }
+
+    setLoading(false)
+  }
+
+  return (
+    <Button onClick={(e) => handleSubmit} disabled={loading} type="button">
+      {loading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Send className="h-4 w-4" />
+      )}
+      {loading ? 'Sending...' : 'Send Invoice'}
+    </Button>
+  )
 }
-
-export default SendInvoiceClientButton
-
-
-
-
-

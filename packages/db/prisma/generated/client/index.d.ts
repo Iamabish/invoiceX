@@ -11315,7 +11315,7 @@ export namespace Prisma {
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     paymentToken?: string
-    userId_invoiceNumber?: InvoiceUserIdInvoiceNumberCompoundUniqueInput
+    userId_id?: InvoiceUserIdIdCompoundUniqueInput
     AND?: InvoiceWhereInput | InvoiceWhereInput[]
     OR?: InvoiceWhereInput[]
     NOT?: InvoiceWhereInput | InvoiceWhereInput[]
@@ -11339,7 +11339,7 @@ export namespace Prisma {
     invoiceItems?: InvoiceItemListRelationFilter
     payment?: XOR<PaymentNullableScalarRelationFilter, PaymentWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "paymentToken" | "userId_invoiceNumber">
+  }, "id" | "paymentToken" | "userId_id">
 
   export type InvoiceOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12767,9 +12767,9 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type InvoiceUserIdInvoiceNumberCompoundUniqueInput = {
+  export type InvoiceUserIdIdCompoundUniqueInput = {
     userId: string
-    invoiceNumber: string
+    id: string
   }
 
   export type InvoiceCountOrderByAggregateInput = {
