@@ -1,69 +1,76 @@
 'use server'
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
-import { redirect } from "next/navigation"
 
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export async  function signUp(formData : FormData) {
-    try {
-        const name = formData.get("name") as string
-        const email = formData.get("email") as string
-        const password = formData.get("password") as string
-    
-    
-        console.log('name',name);
-        console.log("email",email);
-        console.log("password",password);
-        
-        
-    
-        const res = await auth.api.signUpEmail({
-            body :{
-                name,
-                
-                password,
-                email
-            }
-        })
-        console.log('res', res);
-    } catch (error) {
-        console.log('Signup error', error);
-        throw error
-    }
+export async function signUp(formData: FormData) {
+  try {
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-    redirect('/')
+    await auth.api.signUpEmail({
+      body: {
+        name,
+        email,
+        password,
+      },
+    });
+  } catch (error: any) {
+    console.error("Signup Error:", error);
 
+    return {
+      success: false,
+      message:
+        error?.body?.message ||
+        error?.message ||
+        "Failed to create account.",
+    };
+  }
+
+  redirect("/");
 }
 
+export async function signIn(formData: FormData) {
+  try {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-export async function signIn(formData : FormData) {
-    try {
-        const email = formData.get('email') as string
-        const password = formData.get('password') as string
-    
-        console.log("email",email);
-        console.log("password",password);
-    
-        const res = await auth.api.signInEmail({
-            body :{
-                email,
-                password
-            }
-        })
-        
-        console.log('res', res);
-    } catch (error) {
-        console.log('Signin error', error);
-        throw error
-        
-    }
+    await auth.api.signInEmail({
+      body: {
+        email,
+        password,
+      },
+    });
+  } catch (error: any) {
+    console.error("Signin Error:", error);
 
-    redirect('/dashboard')
+    return {
+      success: false,
+      message:
+        error?.body?.message ||
+        error?.message ||
+        "Invalid email or password.",
+    };
+  }
 
+  redirect("/dashboard");
 }
 
 export async function logout() {
+  try {
     await auth.api.signOut({
-        headers : await headers()
-    })
+      headers: await headers(),
+    });
+  } catch (error) {
+    console.error("Logout Error:", error);
+
+    return {
+      success: false,
+      message: "Failed to logout.",
+    };
+  }
+
+  redirect("/");
 }

@@ -4,7 +4,7 @@ import { Download } from 'lucide-react'
 
 const InvoiceDownloadButton = ({id} : {id : string}) => {
 
-    console.log('renderd');
+    console.log('invoice downlaod button');
     
 
   return (

@@ -8,6 +8,7 @@
   "dependencies": {
     "@invoicex/db": "workspace:*",
     "@invoicex/redis": "workspace:*",
+    "@invoicex/pdf": "workspace:*",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^1.x",
     "bullmq": "^5.80.2",

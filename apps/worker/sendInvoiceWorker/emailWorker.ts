@@ -1,7 +1,7 @@
 import { Worker } from "bullmq";
 import { connection } from "@invoicex/redis";
 import { prisma } from "@invoicex/db";
-import generatePDF from "./generatePDF";
+import { generatePDF } from "@invoicex/pdf"
 import {resend} from "./resend"
 import { EmailTemplate } from "./email/email-template";
 import React from "react"

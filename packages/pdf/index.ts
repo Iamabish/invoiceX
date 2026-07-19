@@ -1,0 +1,3 @@
+
+
+export { generatePDF } from "./generatePDF"

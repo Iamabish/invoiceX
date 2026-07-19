@@ -1,15 +1,20 @@
 import { prisma } from "@invoicex/db"
 
 import { NextRequest, NextResponse } from "next/server";
-import generatePDF from "@/app/utils/generatePDF";
-
-//need fix here 
+import { generatePDF } from "@invoicex/pdf"
 
 export async function GET(req  : NextRequest, 
    { params } :  { params : Promise<{id : string}> }
 ) {
+
+
+    console.log('at get req for download  pdf');
+    
     
     const { id }  = await params
+
+    console.log('id ', id);
+    
   
     const invoice = await prisma.invoice.findUnique({
         where: {

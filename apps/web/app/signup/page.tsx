@@ -8,9 +8,29 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUp } from "../actions/auth";
+import { toast } from "sonner";
+
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
+
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const result = await signUp(formData);
+
+      if (result?.success === false) {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  }
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-950 px-6 py-10">
@@ -33,7 +53,7 @@ export default function SignUp() {
             </p>
           </div>
 
-          <form action={signUp} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-zinc-300">
                 Full name

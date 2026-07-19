@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { logout } from "@/app/actions/auth";
 
 const navigation = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -93,7 +94,9 @@ export default function SideBar({ user }: SidebarProps) {
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-500 transition-all duration-200 hover:bg-red-50 hover:text-red-500">
+              <button onClick={()=> logout(
+                
+              )} className="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-500 transition-all duration-200 hover:bg-red-50 hover:text-red-500">
                 <LogOut className="h-5 w-5" strokeWidth={1.5} />
               </button>
             </TooltipTrigger>
@@ -107,7 +110,6 @@ export default function SideBar({ user }: SidebarProps) {
           </Tooltip>
         </nav>
 
-        {/* User Avatar */}
         <Tooltip>
           <TooltipTrigger asChild>
             <button className="mt-6 flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-sky-100 text-xs font-semibold text-slate-800 shadow-sm transition-shadow hover:shadow-md">
