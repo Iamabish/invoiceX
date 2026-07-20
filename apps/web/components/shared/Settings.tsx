@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Field from "./Field";
-import { getPasswordStrength } from "@/helper/helper";
+import { getPasswordStrength } from "@/app/utils/helper"
 import { changePassword, deleteAccount, updateProfile } from "@/app/actions/user";
 import uploadCloudinary from "@/app/actions/upload";
 
