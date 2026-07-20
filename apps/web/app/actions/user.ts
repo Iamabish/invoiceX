@@ -107,120 +107,116 @@ import { headers } from 'next/headers'
   const total = subTotal + tax
 
   const invoice = await prisma.$transaction(async (tx) => {
-  const invoiceCount = await tx.invoice.count({
-    where: {
-    userId: session.user.id,
-    },
-  })
+    const invoiceCount = await tx.invoice.count({
+      where: {
+      userId: session.user.id,
+      },
+    })
 
   const invoiceNumber = `INV-${String(invoiceCount + 1).padStart(4, '0')}`
 
-  const newInvoice = await tx.invoice.create({
-  data: {
-  invoiceNumber,
-  userId: session.user.id,
-  clientId: data.clientId,
-  subTotal,
-  taxRate: Number(data.taxRate),
-  tax,
-  total,
-  issueDate: new Date(data.issueDate),
-  dueDate: new Date(data.dueDate),
-  notes: data.notes,
-  status: 'DRAFT',
-  },
-  select: {
-  id: true,
-  invoiceNumber: true,
-  },
-  })
+    const newInvoice = await tx.invoice.create({
+      data: {
+        invoiceNumber,
+        userId: session.user.id,
+        clientId: data.clientId,
+        subTotal,
+        taxRate: Number(data.taxRate),
+        tax,
+        total,
+        issueDate: new Date(data.issueDate),
+        dueDate: new Date(data.dueDate),
+        notes: data.notes,
+        status: 'DRAFT',
+        },
+        select: {
+        id: true,
+        invoiceNumber: true,
+      },
+    })
 
   await tx.invoiceItem.createMany({
-  data: data.items.map((item) => ({
-  description: item.description,
-  quantity: item.quantity,
-  unitPrice: item.unitPrice,
-  invoiceId: newInvoice.id,
-  })),
+    data: data.items.map((item) => ({
+    description: item.description,
+    quantity: item.quantity,
+    unitPrice: item.unitPrice,
+    invoiceId: newInvoice.id,
+    })),
   })
 
-  return newInvoice
+    return newInvoice
   })
 
-  return {
-  success: true,
-  message: 'Invoice created successfully',
-  data: invoice,
-  }
+    return {
+      success: true,
+      message: 'Invoice created successfully',
+      data: invoice,
+    }
   } catch (err) {
-  console.error('Create invoice error:', err)
+    console.error('Create invoice error:', err)
 
-  return {
-  success: false,
-  error:
-  err instanceof Error
-  ? err.message
-  : 'Failed to create invoice',
+    return {
+      success: false,
+      error:
+      err instanceof Error
+      ? err.message
+      : 'Failed to create invoice',
+    }
   }
   }
-  }
 
-/**
 
-* Delete invoice
-  */
   export async function deleteInvoice(invoiceId: string) {
   try {
-  const session = await auth.api.getSession({
-  headers: await headers(),
+    const session = await auth.api.getSession({
+    headers: await headers(),
   })
 
   if (!session?.user) {
-  return {
-  success: false,
-  error: 'Unauthorized',
-  }
+    return {
+      success: false,
+      error: 'Unauthorized',
+    }
   }
 
-  // Validate ownership using composite unique index
   const invoice = await prisma.invoice.findUnique({
   where: {
-  userId_id: {
-  userId: session.user.id,
-  id: invoiceId,
-  },
-  },
-  select: {
-  id: true,
-  },
+      userId_id: {
+        userId: session.user.id,
+        id: invoiceId,
+      },
+    },
+    select: {
+      id: true,
+    },
   })
 
   if (!invoice) {
-  return {
-  success: false,
-  error: 'Invoice not found',
-  }
+    return {
+      success: false,
+      error: 'Invoice not found',
+    }
   }
 
   await prisma.invoice.delete({
-  where: {
-  id: invoice.id,
-  },
+    where: {
+      id: invoice.id,
+    },
   })
 
   return {
-  success: true,
-  message: 'Invoice deleted successfully',
-  }
+    success: true,
+    message: 'Invoice deleted successfully',
+    }
   } catch (err) {
   console.error('Delete invoice error:', err)
 
   return {
-  success: false,
-  error:
-  err instanceof Error
-  ? err.message
-  : 'Failed to delete invoice',
+      success: false,
+      error:
+      err instanceof Error
+      ? err.message
+      : 'Failed to delete invoice',
+    }
   }
-  }
-  }
+}

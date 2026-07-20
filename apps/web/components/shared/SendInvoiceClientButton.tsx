@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import {  MouseEvent, useState } from 'react'
 import { toast } from 'sonner'
 import { Send, Loader2 } from 'lucide-react'
 import { Button } from '../ui/button'
@@ -13,8 +13,8 @@ export default function SendInvoiceClientButton({
 }) {
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e) {
-    e.prevenetDefault()
+  async function handleSubmit(e :  MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
     setLoading(true)
 
     const result = await sendInvoice(invoiceId)

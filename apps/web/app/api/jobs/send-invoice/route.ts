@@ -1,30 +1,14 @@
-import { Worker } from "bullmq";
-import { connection } from "@invoicex/redis";
+import { EmailTemplate } from "@/app/templates/email/email-template";
 import { prisma } from "@invoicex/db";
-import { generatePDF } from "@invoicex/pdf"
-import {resend} from "./resend"
-import { EmailTemplate } from "./email/email-template";
-import React from "react"
+import { generatePDF } from "@/app/utils/generatePDF"
+import { resend } from "@/lib/resend";
+import { NextRequest, NextResponse } from "next/server";
+import React from "react";
 
-
-
-const emailWorker = new Worker("email-queue",async (job) => {
-
-  console.log('worker live');
-  console.log(job.id);
-  
-  
-
-  switch (job.name) {
-
-    case "send-invoice-email": {
-
-      console.log('at send case');
-
+export async function POST(req : NextRequest) {
     try {
       
-          const invoiceId = job.data.invoiceId;
-          const userId = job.data.userId;
+         const { invoiceId, userId } = await req.json();
       
       
           console.log('invoice id', invoiceId);
@@ -133,46 +117,17 @@ const emailWorker = new Worker("email-queue",async (job) => {
             }
           })
 
+
+          return NextResponse.json({ success: true });
+
     } catch (error) {
     
-      console.log('Worker error', error);  
-      throw error
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Unknown error" },
+        { status: 500 }
+        );
     }
 
-      break;
-    }
-
-  default:
-    throw new Error(`Unknown job: ${job.name}`);
 }
 
-  },
-  {
-    connection,
-    concurrency : 5,
-    limiter :{
-      max : 100,
-      duration : 60 * 1000
-    }
-  }
-);
 
-emailWorker.on("failed", (job, err) => {
-
-  console.log('error', err);
-  console.log('job', job?.name);
-  
-  
-  
-})
-
-
-// emailWorker.on('completed', (job) => {
-//   metrics.histogram('job.duration', job.processedOn! - job.timestamp, {
-//     queue: 'email', name: job.name,
-//   });
-// });
-
-// emailWorker.on('failed', () => {
-//   metrics.increment('job.failed', { queue: 'email' });
-// });

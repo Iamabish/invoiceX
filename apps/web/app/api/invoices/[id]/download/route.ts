@@ -1,7 +1,8 @@
 import { prisma } from "@invoicex/db"
 
 import { NextRequest, NextResponse } from "next/server";
-import { generatePDF } from "@invoicex/pdf"
+import { generatePDF } from "@/app/utils/generatePDF"
+
 
 export async function GET(req  : NextRequest, 
    { params } :  { params : Promise<{id : string}> }

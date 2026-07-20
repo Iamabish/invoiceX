@@ -2,8 +2,8 @@
 
 import { InvoiceFormValues } from '@/components/shared/InvoiceFormClient'
 import { auth } from '@/lib/auth'
+import { qstash } from '@/lib/qstash'
 import { prisma } from '@invoicex/db'
-import { emailQueue } from '@invoicex/redis'
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
@@ -21,9 +21,15 @@ export async function sendInvoice(invoiceId: string) {
       }
     }
 
-    await emailQueue.add('send-invoice-email', {
-      invoiceId,
-      userId: session.user.id,
+   
+
+
+    await qstash.publishJSON({
+      url: `${process.env.APP_URL}/api/jobs/send-invoice`,
+      body :{
+        invoiceId : invoiceId,
+        userId : session.user.id
+      }
     })
 
     return {
