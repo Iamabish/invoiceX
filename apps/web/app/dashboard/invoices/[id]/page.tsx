@@ -5,10 +5,8 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { formatCurrency, formatDate } from "@/app/utils/helper";
 
-import { Button } from "@/components/ui/button";
 import {
   Calendar,
-  Trash2,
   User,
   Building2,
   Phone,
