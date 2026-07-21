@@ -1,10 +1,10 @@
+
+// apps/web/next.config.ts
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
-  outputFileTracingIncludes: {
-    '/**/*': ['../../packages/db/prisma/generated/client/**/*'],
-  },
-  
+  outputFileTracingRoot: path.join(__dirname, "../../"),
 };
 
 export default nextConfig;

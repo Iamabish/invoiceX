@@ -7,12 +7,9 @@ import { prisma } from '@invoicex/db'
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
-
 export async function sendInvoice(invoiceId: string) {
   try {
-
-    console.log('send invoice ', invoiceId);
-    
+    console.log('send invoice', invoiceId)
 
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -25,13 +22,12 @@ export async function sendInvoice(invoiceId: string) {
       }
     }
 
-   
     await qstash.publishJSON({
       url: `${process.env.APP_URL}/api/jobs/send-invoice`,
-      body :{
-        invoiceId : invoiceId,
-        userId : session.user.id
-      }
+      body: {
+        invoiceId,
+        userId: session.user.id,
+      },
     })
 
     return {
@@ -39,19 +35,15 @@ export async function sendInvoice(invoiceId: string) {
       message: 'Invoice queued for delivery',
       data: null,
     }
-  } catch (err) {
-    console.error('Send invoice error:', err)
+  } catch (error: any) {
+    console.error('Send Invoice Error:', error)
 
     return {
       success: false,
-      error:
-        err instanceof Error
-          ? err.message
-          : 'Failed to send invoice',
+      error: 'Something went wrong. Please try again in a moment.',
     }
   }
 }
-
 
 export async function createInvoice(data: InvoiceFormValues) {
   try {
@@ -164,19 +156,15 @@ export async function createInvoice(data: InvoiceFormValues) {
       message: 'Invoice created successfully',
       data: invoice,
     }
-  } catch (err) {
-    console.error('Create invoice error:', err)
+  } catch (error: any) {
+    console.error('Create Invoice Error:', error)
 
     return {
       success: false,
-      error:
-        err instanceof Error
-          ? err.message
-          : 'Failed to create invoice',
+      error: 'Something went wrong. Please try again in a moment.',
     }
   }
 }
-
 
 export async function deleteInvoice(invoiceId: string) {
   try {
@@ -216,7 +204,6 @@ export async function deleteInvoice(invoiceId: string) {
       },
     })
 
-
     revalidatePath('/dashboard/invoices')
 
     return {
@@ -224,15 +211,12 @@ export async function deleteInvoice(invoiceId: string) {
       message: 'Invoice deleted successfully',
       data: null,
     }
-  } catch (err) {
-    console.error('Delete invoice error:', err)
+  } catch (error: any) {
+    console.error('Delete Invoice Error:', error)
 
     return {
       success: false,
-      error:
-        err instanceof Error
-          ? err.message
-          : 'Failed to delete invoice',
+      error: 'Something went wrong. Please try again in a moment.',
     }
   }
 }

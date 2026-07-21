@@ -42,15 +42,22 @@ export async function addClient(formData: FormData) {
       message: 'Client created successfully',
       data: client,
     }
-  } catch (err) {
-    console.log('Create client error', err)
+  } catch (error: any) {
+    console.error('Create Client Error:', error)
+
+    const errorMessage =
+      error?.message?.toLowerCase() || ''
+
+    const isDuplicateEmail =
+      errorMessage.includes('unique') ||
+      errorMessage.includes('duplicate') ||
+      errorMessage.includes('already')
 
     return {
       success: false,
-      error:
-        err instanceof Error
-          ? err.message
-          : 'Failed to create client',
+      error: isDuplicateEmail
+        ? 'A client with this email already exists.'
+        : 'Something went wrong. Please try again in a moment.',
     }
   }
 }
@@ -111,15 +118,22 @@ export async function editClient(clientId: string, formData: FormData) {
       message: 'Client updated successfully',
       data: client,
     }
-  } catch (err) {
-    console.log('Edit client error', err)
+  } catch (error: any) {
+    console.error('Edit Client Error:', error)
+
+    const errorMessage =
+      error?.message?.toLowerCase() || ''
+
+    const isDuplicateEmail =
+      errorMessage.includes('unique') ||
+      errorMessage.includes('duplicate') ||
+      errorMessage.includes('already')
 
     return {
       success: false,
-      error:
-        err instanceof Error
-          ? err.message
-          : 'Failed to update client',
+      error: isDuplicateEmail
+        ? 'Another client is already using this email.'
+        : 'Something went wrong. Please try again in a moment.',
     }
   }
 }
@@ -167,27 +181,23 @@ export async function deleteClient(clientId: string) {
       message: 'Client deleted successfully',
       data: null,
     }
-  } catch (err) {
-    console.log('Delete client error', err)
-
+  } catch (error: any) {
+    console.error('Delete Client Error:', error)
 
     if (
-        err instanceof Prisma.PrismaClientKnownRequestError &&
-        err.code === 'P2003'
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2003'
     ) {
-        return {
+      return {
         success: false,
         error:
-            'Cannot delete this client because invoices are associated with it. Delete the invoices first.',
-        }
+          'Cannot delete this client because invoices are associated with it. Delete the invoices first.',
+      }
     }
 
     return {
-        success: false,
-        error:
-        err instanceof Error
-            ? err.message
-            : 'Failed to delete client',
-    }
+      success: false,
+      error: 'Something went wrong. Please try again in a moment.',
     }
   }
+}
