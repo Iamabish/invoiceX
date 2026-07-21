@@ -6,7 +6,12 @@ import { authRateLimit, payRateLimit } from "./lib/rateLimit";
 
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/signin', '/signup', '/api/invoices/:path*'],
+  matcher: [
+    '/signin',
+    '/signup',
+    '/dashboard/:path*',
+    '/api/invoices/:path*/pay',
+  ],
 }
 
 export async function proxy(req: NextRequest) {
@@ -15,10 +20,18 @@ export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
   if (path.startsWith('/signin') || path.startsWith('/signup')) {
-    const { success } = await authRateLimit.limit(ip);
+    const { success, limit, remaining } = await authRateLimit.limit(ip);
     if (!success) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
+
+
+    console.log('limit', limit);
+    console.log('ip', ip);
+    console.log('success', success);
+    console.log('remaining', remaining);
+  
+    
   }
 
   if (path.match(/^\/api\/invoices\/[^/]+\/pay/)) {
