@@ -17,6 +17,9 @@ export default function SendInvoiceClientButton({
     e.preventDefault()
     setLoading(true)
 
+    console.log('handle invoice click');
+    
+
     const result = await sendInvoice(invoiceId)
 
     if (result.success) {
@@ -29,7 +32,7 @@ export default function SendInvoiceClientButton({
   }
 
   return (
-    <Button onClick={(e) => handleSubmit} disabled={loading} type="button">
+    <Button onClick={handleSubmit} disabled={loading} type="button">
       {loading ? (
         <Loader2 className="h-4 w-4 animate-spin" />
       ) : (

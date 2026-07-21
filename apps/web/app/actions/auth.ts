@@ -1,14 +1,31 @@
 'use server'
 
 import { auth } from "@/lib/auth";
+import { authRateLimit } from "@/lib/rateLimit";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function signUp(formData: FormData) {
+export async function signUp(formData: FormData, req : NextRequest) {
   try {
+
+
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+
+      const { success, limit, remaining } = await authRateLimit.limit(ip);
+      if (!success) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+      }
+
+      console.log('limit', limit);
+      console.log('ip', ip);
+      console.log('success', success);
+      console.log('remaining', remaining);
+
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+
 
     await auth.api.signUpEmail({
       body: {
@@ -17,6 +34,7 @@ export async function signUp(formData: FormData) {
         password,
       },
     });
+
   } catch (error: any) {
     console.error("Signup Error:", error);
 
@@ -32,8 +50,22 @@ export async function signUp(formData: FormData) {
   redirect("/");
 }
 
-export async function signIn(formData: FormData) {
+export async function signIn(formData: FormData, req : NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+
+
+        const { success, limit, remaining } = await authRateLimit.limit(ip);
+        if (!success) {
+          return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+        }
+    
+    
+        console.log('limit', limit);
+        console.log('ip', ip);
+        console.log('success', success);
+        console.log('remaining', remaining);
+
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 

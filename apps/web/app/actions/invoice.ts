@@ -10,6 +10,10 @@ import { headers } from 'next/headers'
 
 export async function sendInvoice(invoiceId: string) {
   try {
+
+    console.log('send invoice ', invoiceId);
+    
+
     const session = await auth.api.getSession({
       headers: await headers(),
     })
@@ -22,8 +26,6 @@ export async function sendInvoice(invoiceId: string) {
     }
 
    
-
-
     await qstash.publishJSON({
       url: `${process.env.APP_URL}/api/jobs/send-invoice`,
       body :{
