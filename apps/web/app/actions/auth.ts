@@ -48,7 +48,6 @@ export async function signUp(formData: FormData) {
   redirect("/");
 }
 
-"use server";
 
 
 export async function signIn(formData: FormData) {
