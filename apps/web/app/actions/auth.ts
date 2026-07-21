@@ -4,28 +4,26 @@ import { auth } from "@/lib/auth";
 import { authRateLimit } from "@/lib/rateLimit";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { NextRequest, NextResponse } from "next/server";
 
-export async function signUp(formData: FormData, req : NextRequest) {
+export async function signUp(formData: FormData) {
   try {
 
 
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+   const headersList = await headers();
+    const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
 
-      const { success, limit, remaining } = await authRateLimit.limit(ip);
-      if (!success) {
-        return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
-      }
+    const { success } = await authRateLimit.limit(ip);
+    if (!success) {
+      return {
+        success: false,
+        message: "Too many attempts. Please try again in a few minutes.",
+      };
+    }
 
-      console.log('limit', limit);
-      console.log('ip', ip);
-      console.log('success', success);
-      console.log('remaining', remaining);
-
+     
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-
 
     await auth.api.signUpEmail({
       body: {
@@ -50,31 +48,29 @@ export async function signUp(formData: FormData, req : NextRequest) {
   redirect("/");
 }
 
-export async function signIn(formData: FormData, req : NextRequest) {
+"use server";
+
+
+export async function signIn(formData: FormData) {
   try {
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+    const headersList = await headers();
+    const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
 
-
-        const { success, limit, remaining } = await authRateLimit.limit(ip);
-        if (!success) {
-          return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
-        }
-    
-    
-        console.log('limit', limit);
-        console.log('ip', ip);
-        console.log('success', success);
-        console.log('remaining', remaining);
+    const { success } = await authRateLimit.limit(ip);
+    if (!success) {
+      return {
+        success: false,
+        message: "Too many attempts. Please try again in a few minutes.",
+      };
+    }
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     await auth.api.signInEmail({
-      body: {
-        email,
-        password,
-      },
+      body: { email, password },
     });
+
   } catch (error: any) {
     console.error("Signin Error:", error);
 
