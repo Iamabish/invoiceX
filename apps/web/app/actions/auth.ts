@@ -12,15 +12,17 @@ try {
   headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ??
   'unknown'
 
-  const { success } = await authRateLimit.limit(ip)
+  //imp -- uncomment later
 
-  if (!success) {
-    return {
-      success: false,
-      message:
-        'Too many attempts. Please try again in a few minutes.',
-    }
-  }
+  // const { success } = await authRateLimit.limit(ip)
+
+  // if (!success) {
+  //   return {
+  //     success: false,
+  //     message:
+  //       'Too many attempts. Please try again in a few minutes.',
+  //   }
+  // }
 
   const name = formData.get('name') as string
   const email = formData.get('email') as string
@@ -66,15 +68,15 @@ export async function signIn(formData: FormData) {
     const ip =
     headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     'unknown'
-    const { success } = await authRateLimit.limit(ip)
+    // const { success } = await authRateLimit.limit(ip)
 
-    if (!success) {
-      return {
-        success: false,
-        message:
-          'Too many attempts. Please try again in a few minutes.',
-      }
-    }
+    // if (!success) {
+    //   return {
+    //     success: false,
+    //     message:
+    //       'Too many attempts. Please try again in a few minutes.',
+    //   }
+    // }
 
     const email = formData.get('email') as string
     const password = formData.get('password') as string
