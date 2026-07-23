@@ -21,7 +21,7 @@ function pick<T>(arr: T[], i: number): T {
   return arr[i % arr.length];
 }
 
-// generates a random date within the last 12 months
+// generates a random date within the last 12 monthsp
 function randomDateInLastYear(): Date {
   const now = new Date();
   const oneYearAgo = new Date();
