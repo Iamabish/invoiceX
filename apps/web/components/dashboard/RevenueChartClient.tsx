@@ -1,4 +1,3 @@
-// RevenueChartClient.tsx
 "use client";
 
 import {
@@ -11,7 +10,6 @@ import {
   YAxis,
 } from "recharts";
 import { Card } from "@/components/ui/card";
-import { ArrowUpRight } from "lucide-react";
 
 interface RevenueChartClientProps {
   revenue: { month: string; revenue: number }[];
