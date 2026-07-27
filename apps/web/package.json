@@ -6,7 +6,8 @@
         "dev": "next dev",
         "start": "next start",
         "lint": "eslint",
-        "build": "cd ../../packages/db && bunx prisma generate && cd ../../apps/web && next build"
+        "build": "cd ../../packages/db && bunx prisma generate && cd ../../apps/web && next build",
+        "postinstall": "prisma generate"
     },
     "dependencies": {
         "@hookform/resolvers": "^5.4.0",
