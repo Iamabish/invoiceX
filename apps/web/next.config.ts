@@ -5,7 +5,10 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname, "../../"),
   serverExternalPackages: ["@prisma/client", "@invoicex/db"],
   outputFileTracingIncludes: {
-    "/**/*": ["../../packages/db/prisma/generated/client/*.wasm"],
+    "/**/*": [
+      "../../packages/db/prisma/generated/client/*.node",
+      "../../packages/db/prisma/generated/client/*.wasm",
+    ],
   },
 };
 
