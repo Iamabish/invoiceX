@@ -1,4 +1,4 @@
-import { EmailTemplate } from "@/app/templates/email/email-template";
+import { EmailTemplate } from "@/app/utils/templates/email/email-template";
 import { prisma } from "@invoicex/db";
 import { generatePDF } from "@/app/utils/generatePDF"
 import { resend } from "@/lib/resend";

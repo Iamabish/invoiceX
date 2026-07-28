@@ -22,8 +22,21 @@ export async function sendInvoice(invoiceId: string) {
       }
     }
 
+
+    await prisma.invoice.update({
+      where :{
+        userId_id :{
+          userId : session.user.id,
+          id : invoiceId
+        }
+      },
+      data :{
+        status : "QUEUED"
+      }
+    })
+
     await qstash.publishJSON({
-      url: `${process.env.APP_URL}/api/jobs/send-invoice`,
+      url: process.env.QSTASH_ENDPOINT!,
       body: {
         invoiceId,
         userId: session.user.id,
@@ -213,6 +226,53 @@ export async function deleteInvoice(invoiceId: string) {
     }
   } catch (error: any) {
     console.error('Delete Invoice Error:', error)
+
+    return {
+      success: false,
+      error: 'Something went wrong. Please try again in a moment.',
+    }
+  }
+}
+
+
+export async function getInvoiceStatus(invoiceId: string) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    })
+
+    if (!session?.user) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      }
+    }
+
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        userId_id: {
+          userId: session.user.id,
+          id: invoiceId,
+        },
+      },
+      select: {
+        status: true,
+      },
+    })
+
+    if (!invoice) {
+      return {
+        success: false,
+        error: 'Invoice not found',
+      }
+    }
+
+    return {
+      success: true,
+      data: invoice.status,
+    }
+  } catch (error: any) {
+    console.error('Get Invoice Status Error:', error)
 
     return {
       success: false,

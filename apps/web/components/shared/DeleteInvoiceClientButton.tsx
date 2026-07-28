@@ -27,6 +27,7 @@ const DeleteInvoiceClientButton = ({
       if (result.success) {
         toast.success(result.message)
 
+        // Redirect to invoices page
         router.push('/dashboard/invoices')
       } else {
         toast.error(result.error)

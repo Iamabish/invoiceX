@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import {prisma} from "@invoicex/db"
-
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { formatCurrency, formatDate } from "@/app/utils/helper";
@@ -16,26 +15,9 @@ import {
 import InvoiceDownloadButton from "@/components/shared/InvoiceDownloadButton";
 import SendInvoiceClientButton from "@/components/shared/SendInvoiceClientButton";
 import DeleteInvoiceClientButton from "@/components/shared/DeleteInvoiceClientButton";
+import InvoiceStatusPill from "@/components/shared/InvoiceStatusPill";
 
-const statusConfig: Record<string, { label: string; dot: string; text: string; bg: string }> = {
-  PAID: { label: "Paid", dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50" },
-  SENT: { label: "Sent", dot: "bg-sky-500", text: "text-sky-700", bg: "bg-sky-50" },
-  OVERDUE: { label: "Overdue", dot: "bg-red-500", text: "text-red-700", bg: "bg-red-50" },
-  DRAFT: { label: "Draft", dot: "bg-amber-500", text: "text-amber-700", bg: "bg-amber-50" },
-};
 
-function StatusPill({ status }: { status: string }) {
-  const config = statusConfig[status] ?? statusConfig.DRAFT;
-
-  return (
-    <span
-      className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium ${config.bg} ${config.text}`}
-    >
-      <span className={`h-2 w-2 rounded-full ${config.dot}`} />
-      {config.label}
-    </span>
-  );
-}
 
 const InvoiceDetailPage = async ({
   params,
@@ -97,7 +79,7 @@ const InvoiceDetailPage = async ({
             {invoice.invoiceNumber}
           </h1>
 
-          <StatusPill status={invoice.status} />
+          <InvoiceStatusPill invoiceId={id} initialStatus={invoice.status} />
         </div>
 
         <p className="mt-2 text-sm text-slate-500">
@@ -108,7 +90,12 @@ const InvoiceDetailPage = async ({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex">
         <InvoiceDownloadButton id={id} />
 
-        <SendInvoiceClientButton invoiceId={id} />
+
+      {
+        invoice.status === "DRAFT" && (
+          <SendInvoiceClientButton invoiceId={id} />
+        )
+      }
 
         {invoice.status === "DRAFT" && (
           <DeleteInvoiceClientButton  invoiceId={id}/>
@@ -218,7 +205,7 @@ const InvoiceDetailPage = async ({
                 Current Status
               </span>
 
-              <StatusPill status={invoice.status} />
+              <InvoiceStatusPill invoiceId={id} initialStatus={invoice.status} />
             </div>
           </div>
         </div>

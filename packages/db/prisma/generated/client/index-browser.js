@@ -245,7 +245,8 @@ exports.INVOICE_STATUS = exports.$Enums.INVOICE_STATUS = {
   DRAFT: 'DRAFT',
   SENT: 'SENT',
   PAID: 'PAID',
-  OVERDUE: 'OVERDUE'
+  OVERDUE: 'OVERDUE',
+  QUEUED: 'QUEUED'
 };
 
 exports.Prisma.ModelName = {

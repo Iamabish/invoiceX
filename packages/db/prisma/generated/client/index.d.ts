@@ -70,7 +70,8 @@ export const INVOICE_STATUS: {
   DRAFT: 'DRAFT',
   SENT: 'SENT',
   PAID: 'PAID',
-  OVERDUE: 'OVERDUE'
+  OVERDUE: 'OVERDUE',
+  QUEUED: 'QUEUED'
 };
 
 export type INVOICE_STATUS = (typeof INVOICE_STATUS)[keyof typeof INVOICE_STATUS]

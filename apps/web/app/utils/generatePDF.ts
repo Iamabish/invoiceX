@@ -5,7 +5,7 @@ import { formatCurrency, formatDate } from  "./helper"
 import { fileURLToPath } from "url";
 type InvoiceData = {
   invoiceNumber: string;
-  status: "DRAFT" | "SENT" | "PAID" | "OVERDUE";
+  status: "DRAFT" | "SENT" | "PAID" | "OVERDUE" | "QUEUED";
   issueDate: Date;
   dueDate: Date;
   subTotal: number;

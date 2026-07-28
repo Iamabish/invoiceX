@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import {
   Plus,
   Trash2,
@@ -47,8 +47,12 @@ function toDate(value: string | undefined) {
   return value ? new Date(value) : new Date();
 }
 
-function toISODateString(date: Date) {
-  return date.toISOString().split("T")[0];
+  function formatDate(date: Date) {
+    // selected fields formater
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
@@ -56,7 +60,7 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
     const [issueDateOpen, setIssueDateOpen] = useState(false);
     const [dueDateOpen, setDueDateOpen] = useState(false);
 
-  const router = useRouter()
+    const router = useRouter()
 
   const {
     register,
@@ -64,7 +68,9 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
     watch,
     handleSubmit,
     setValue,
-    formState: { isSubmitting },
+    setError,
+    clearErrors,
+    formState: { isSubmitting, errors },
   } = useForm<InvoiceFormValues>({
     defaultValues: {
       clientId: "",
@@ -89,9 +95,13 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
     name: "items",
   });
 
-  const items = watch("items");
-  const taxRate = watch("taxRate");
-  const clientId = watch("clientId");
+
+
+  const items = useWatch({ control, name: "items" });
+  const taxRate = useWatch({ control, name: "taxRate" });
+  const clientId = useWatch({ control, name: "clientId" });
+  const issueDate = useWatch({ control, name: "issueDate" });
+  const dueDate = useWatch({ control, name: "dueDate" });
 
   const selectedClient = useMemo(
     () => clients?.find((c) => c.id === clientId),
@@ -108,6 +118,17 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
   const total = subtotal + tax;
 
    async function onSubmit(data: InvoiceFormValues, action: 'send' | 'draft') {
+    console.log('action',action);
+
+    if (data.dueDate && data.issueDate && new Date(data.dueDate) < new Date(data.issueDate)) {
+      setError("dueDate", {
+        type: "manual",
+        message: "Due date cannot be before issue date",
+      });
+      toast.error("Due date cannot be before issue date");
+      return;
+    }
+
     try {
       const invoice = await createInvoice(data);
 
@@ -116,6 +137,8 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
         return;
       }
 
+      console.log('invoice id', invoice.data.id);
+
       if (action === 'send') {
         try {
           await sendInvoice(invoice.data.id);
@@ -123,14 +146,14 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
         } catch (sendErr) {
           console.error('send invoice failed', sendErr);
           toast.warning("Invoice saved, but sending failed — you can retry from the invoice page");
-          router.push(`/invoices/${invoice.data.id}`);
+          router.push(`/dashboard/invoices/${invoice.data.id}`);
           return;
         }
       } else {
         toast.success("Draft saved");
       }
 
-      router.push(`/invoices/${invoice.data.id}`);
+      router.push(`/dashboard/invoices/${invoice.data.id}`);
 
     } catch (err) {
       console.error('invoice submit failed', err);
@@ -229,8 +252,15 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
                       selected={toDate(field.value)}
                       onSelect={(d) => {
                         if (!d) return;
-                        field.onChange(toISODateString(d));
+                        field.onChange(formatDate(d));
                         setIssueDateOpen(false);
+
+                        // if the newly picked issue date pushes past the
+                        // current due date, clear the (now invalid) due date
+                        if (dueDate && d > toDate(dueDate)) {
+                          setValue("dueDate", "");
+                        }
+                        clearErrors("dueDate");
                       }}
                     />
                   </PopoverContent>
@@ -268,16 +298,23 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
                   <Calendar
                     mode="single"
                     selected={field.value ? toDate(field.value) : undefined}
+                    disabled={{ before: toDate(issueDate) }}
                     onSelect={(d) => {
                       if (!d) return;
-                      field.onChange(toISODateString(d));
+                      field.onChange(formatDate(d));
                       setDueDateOpen(false);
+                      clearErrors("dueDate");
                     }}
                   />
                 </PopoverContent>
               </Popover>
               )}
             />
+            {errors.dueDate && (
+              <p className="mt-1.5 text-xs text-ix-status-overdue">
+                {errors.dueDate.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -299,47 +336,54 @@ export default function InvoiceFormClient({ clients }: { clients: Client[] }) {
               return (
                 <div
                   key={field.id}
-                  className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-start pb-3 border-b border-ix-border/50 last:border-0"
+                  className="pb-3 border-b border-ix-border/50 last:border-0"
                 >
-                  <div className="sm:col-span-5">
-                    <input
-                      type="text"
-                      placeholder="Item description"
-                      {...register(`items.${index}.description`)}
-                      className="w-full px-3 py-2 bg-ix-elevated rounded-lg text-sm text-ix-dark placeholder:text-ix-muted focus:outline-none focus:ring-2 focus:ring-ix-teal/20"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-start">
+                    <div className="sm:col-span-6">
+                      <input
+                        type="text"
+                        placeholder="Item description"
+                        {...register(`items.${index}.description`)}
+                        className="w-full px-3 py-2 bg-ix-elevated rounded-lg text-sm text-ix-dark placeholder:text-ix-muted focus:outline-none focus:ring-2 focus:ring-ix-teal/20"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <input
+                        type="number"
+                        min={1}
+                        {...register(`items.${index}.quantity`, {
+                          valueAsNumber: true,
+                        })}
+                        onFocus={(e) => e.target.select()}
+                        className="w-full px-3 py-2 bg-ix-elevated rounded-lg text-sm text-ix-dark focus:outline-none focus:ring-2 focus:ring-ix-teal/20"
+                      />
+                    </div>
+                    <div className="sm:col-span-3">
+                      <input
+                        type="number"
+                        min={0}
+                        {...register(`items.${index}.unitPrice`, {
+                          valueAsNumber: true,
+                        })}
+                        onFocus={(e) => e.target.select()}
+                        className="w-full px-3 py-2 bg-ix-elevated rounded-lg text-sm text-ix-dark focus:outline-none focus:ring-2 focus:ring-ix-teal/20"
+                      />
+                    </div>
+                    <div className="sm:col-span-1 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => fields.length > 1 && remove(index)}
+                        className="p-1.5 rounded-lg hover:bg-red-50 text-ix-muted hover:text-ix-status-overdue transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="sm:col-span-2">
-                    <input
-                      type="number"
-                      min={1}
-                      {...register(`items.${index}.quantity`, {
-                        valueAsNumber: true,
-                      })}
-                      className="w-full px-3 py-2 bg-ix-elevated rounded-lg text-sm text-ix-dark focus:outline-none focus:ring-2 focus:ring-ix-teal/20"
-                    />
-                  </div>
-                  <div className="sm:col-span-3">
-                    <input
-                      type="number"
-                      min={0}
-                      {...register(`items.${index}.unitPrice`, {
-                        valueAsNumber: true,
-                      })}
-                      className="w-full px-3 py-2 bg-ix-elevated rounded-lg text-sm text-ix-dark focus:outline-none focus:ring-2 focus:ring-ix-teal/20"
-                    />
-                  </div>
-                  <div className="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2">
+
+                  <div className="flex justify-end mt-2">
                     <span className="text-sm font-medium text-ix-dark">
                       {formatCurrency(amount)}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => fields.length > 1 && remove(index)}
-                      className="p-1.5 rounded-lg hover:bg-red-50 text-ix-muted hover:text-ix-status-overdue transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               );
